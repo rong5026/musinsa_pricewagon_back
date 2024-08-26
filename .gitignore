@@ -41,4 +41,3 @@ out/
 *.DS_Store
 /src/main/generated
 *.properties
-/src/main/resources/*.yml
