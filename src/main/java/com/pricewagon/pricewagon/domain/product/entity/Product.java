@@ -11,8 +11,6 @@ import com.pricewagon.pricewagon.domain.common.BaseAuditEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -43,7 +41,7 @@ public class Product extends BaseAuditEntity {
 	private String name;
 
 	@Comment("상품 번호")
-	@Column(name = "product_num", nullable = false)
+	@Column(name = "product_num", nullable = false, unique = true)
 	private Integer productNumber;
 
 	@Comment("브랜드 이름")
@@ -51,12 +49,16 @@ public class Product extends BaseAuditEntity {
 	private String brand;
 
 	@Comment("상품 URL")
-	@Column(length = 200, nullable = false)
+	@Column(length = 200, nullable = false, unique = true)
 	private String productUrl;
 
-	@Comment("판매가격")
+	@Comment("판매가")
 	@Column(nullable = false)
 	private Integer salePrice;
+
+	@Comment("원가")
+	@Column(nullable = false)
+	private Integer originPrice;
 
 	@Comment("별점")
 	@Column(nullable = false)
