@@ -76,7 +76,8 @@ public class Product extends BaseAuditEntity {
 	@JoinColumn(name = "category_id", nullable = false)
 	private Category category;
 
-	@OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@JoinColumn(name = "product_detail_id")
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private ProductDetail productDetail;
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
