@@ -2,7 +2,6 @@ package com.pricewagon.pricewagon.domain.product.dto.response;
 
 import com.pricewagon.pricewagon.domain.product.entity.Product;
 import com.pricewagon.pricewagon.domain.product.entity.ProductHistory;
-import com.pricewagon.pricewagon.domain.product.entity.ShopType;
 
 public record BasicProductInfo(
 	 Long id,
@@ -12,7 +11,6 @@ public record BasicProductInfo(
 	 Integer reviewCount,
 	 Integer likeCount,
 	 String imgUrl,
-	 ShopType shopType,
 	 Integer originPrice,
 	 Integer salePrice,
 	 String categoryName,
@@ -28,7 +26,6 @@ public record BasicProductInfo(
 			product.getReviewCount(),
 			product.getLikeCount(),
 			product.getImgUrl(),
-			product.getShopType(),
 			product.getOriginPrice(),
 			productHistory.getPrice(),
 			product.getCategory() != null ? product.getCategory().getCategoryName() : null ,
