@@ -5,7 +5,7 @@ import com.pricewagon.pricewagon.domain.product.entity.ProductHistory;
 import com.pricewagon.pricewagon.domain.product.entity.ShopType;
 
 public record BasicProductInfo(
-	 Long id,
+	 Integer productNumber,
 	 String name,
 	 String brand,
 	 Double starScore,
@@ -21,7 +21,7 @@ public record BasicProductInfo(
 ) {
 	public static BasicProductInfo createHistoryOf (Product product, ProductHistory productHistory) {
 		return new BasicProductInfo(
-			product.getId(),
+			product.getProductNumber(),
 			product.getName(),
 			product.getBrand(),
 			product.getStarScore(),
@@ -30,7 +30,7 @@ public record BasicProductInfo(
 			product.getImgUrl(),
 			product.getShopType(),
 			product.getOriginPrice(),
-			productHistory.getPrice()
+			productHistory != null ? productHistory.getPrice() : 0
 			// product.getCategory() != null ? product.getCategory().getCategoryName() : null ,
 			// product.getCategory().getParentCategory() != null ? product.getCategory().getParentCategory().getCategoryName() : null
 		);
