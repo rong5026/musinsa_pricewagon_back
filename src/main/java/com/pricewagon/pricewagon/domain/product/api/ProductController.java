@@ -3,12 +3,14 @@ package com.pricewagon.pricewagon.domain.product.api;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pricewagon.pricewagon.domain.product.dto.response.BasicProductInfo;
+import com.pricewagon.pricewagon.domain.product.dto.response.IndividualProductInfo;
 import com.pricewagon.pricewagon.domain.product.entity.ShopType;
 import com.pricewagon.pricewagon.domain.product.service.ProductService;
 
@@ -30,6 +32,15 @@ public class ProductController {
 		Pageable pageable
 	) {
 		return productService.getProductsByShopType(shopType, pageable);
+	}
+
+	@Operation(summary = "개별 상품 정보 조최", description = "특정 상품에 대한 정보")
+	@GetMapping("/{shopType}/{productNumber}")
+	public ResponseEntity<IndividualProductInfo> getIndividualProductInfo(
+		@PathVariable ShopType shopType,
+		@PathVariable Integer productNumber
+	) {
+		return productService.getIndividualProductInfo(shopType, productNumber);
 	}
 
 }
