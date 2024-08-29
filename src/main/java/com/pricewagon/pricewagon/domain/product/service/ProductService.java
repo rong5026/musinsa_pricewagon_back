@@ -1,14 +1,18 @@
 package com.pricewagon.pricewagon.domain.product.service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pricewagon.pricewagon.domain.category.entity.Category;
+import com.pricewagon.pricewagon.domain.category.repository.CategoryRepository;
 import com.pricewagon.pricewagon.domain.product.dto.response.BasicProductInfo;
 import com.pricewagon.pricewagon.domain.product.dto.response.IndividualProductInfo;
 import com.pricewagon.pricewagon.domain.product.entity.Product;
@@ -24,16 +28,16 @@ import lombok.RequiredArgsConstructor;
 public class ProductService {
 
 	private final ProductRepository productRepository;
+	private final CategoryRepository categoryRepository;
+	private final ProductHistoryService productHistoryService;
+
+	@Transactional(readOnly = true)
 	public List<BasicProductInfo> getProductsByShopType(ShopType shopType, Pageable pageable) {
 		List<Product> products = productRepository.findAllByShopType(shopType, pageable).getContent();
 
 		return products.stream()
 			.map(product -> {
-				ProductHistory latestHistory = product.getProductHistories().stream()
-					.sorted((h1, h2) -> h2.getCreatedAt().compareTo(h1.getCreatedAt())) // 최신 순으로 정렬
-					.findFirst() // 첫 번째 요소를 가져옵니다.
-					.orElse(null);
-
+				ProductHistory latestHistory = productHistoryService.getLatestHistory(product);
 				return BasicProductInfo.createHistoryOf(product, latestHistory);
 			})
 			.toList();
@@ -50,6 +54,29 @@ public class ProductService {
 		IndividualProductInfo individualProductInfo = IndividualProductInfo.from(product, latestHistory);
 
 		return ResponseEntity.ok(individualProductInfo);
+	}
+
+	public List<BasicProductInfo> getBasicProductsByCategory(ShopType shopType, Pageable pageable, Long categoryId) {
+
+		Category parentCategory = categoryRepository.findById(categoryId)
+			.orElseThrow(() -> new RuntimeException("Category not found"));
+
+		List<Category> categories = categoryRepository.findByParentCategory_Id(categoryId);
+		categories.add(parentCategory);
+
+		// 카테고리 전체 목록 생성
+		List<Long> categoriesId = new ArrayList<>();
+		for (Category category : categories) {
+			categoriesId.add(category.getId());
+		}
+
+		return productRepository.findByShopTypeAndCategory_IdIn(shopType, categoriesId, pageable)
+			.stream()
+			.map(product -> {
+				ProductHistory latestHistory = productHistoryService.getLatestHistory(product);
+				return BasicProductInfo.createHistoryOf(product, latestHistory);
+			})
+			.toList()
 	}
 
 	private Optional<ProductHistory> getLatestProductHistory(List<ProductHistory> productHistories) {
