@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pricewagon.pricewagon.domain.category.dto.CategoryDTO;
+import com.pricewagon.pricewagon.domain.category.dto.response.AllCategoryResponse;
 import com.pricewagon.pricewagon.domain.category.entity.Category;
 import com.pricewagon.pricewagon.domain.category.repository.CategoryRepository;
 
@@ -21,11 +22,14 @@ public class CategoryService {
 			.orElseThrow(() -> new RuntimeException("Category not found"));
 	}
 
-	public List<CategoryDTO> getSubCategoriesByParentId(Long parentCategoryId){
+	// 부모와 하위 카테고리 모두 포함
+	public AllCategoryResponse getParentAndSubCategories(Long parentCategoryId){
+		Category parentCategory = getCategoryById(parentCategoryId);
 		List<Category> categories = getSubCategories(parentCategoryId);
-		return categories.stream()
+		List<CategoryDTO> categoryDTOList = categories.stream()
 			.map(CategoryDTO::toDTO)
 			.toList();
+		return AllCategoryResponse.toDTO(parentCategory, categoryDTOList);
 	}
 
 	// 하위 카테고리 찾기
