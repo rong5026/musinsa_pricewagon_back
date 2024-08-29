@@ -4,7 +4,7 @@ import com.pricewagon.pricewagon.domain.category.entity.Category;
 
 public record CategoryDTO(
 	Long id,
-	String categoryName
+	String cateroyName
 ) {
 	public static CategoryDTO toDTO(Category category) {
 		return new CategoryDTO(

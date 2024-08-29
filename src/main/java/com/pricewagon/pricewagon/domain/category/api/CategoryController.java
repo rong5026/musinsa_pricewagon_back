@@ -1,13 +1,11 @@
 package com.pricewagon.pricewagon.domain.category.api;
 
-import java.util.List;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pricewagon.pricewagon.domain.category.dto.CategoryDTO;
+import com.pricewagon.pricewagon.domain.category.dto.response.AllCategoryResponse;
 import com.pricewagon.pricewagon.domain.category.service.CategoryService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,11 +19,11 @@ import lombok.RequiredArgsConstructor;
 public class CategoryController {
 	private final CategoryService categoryService;
 
-	@Operation(summary = "하위 카테고리 조회", description = "하위 카테고리만 조회")
+	@Operation(summary = "하위 카테고리 조회", description = "부모와 하위 카테고리 포함 조회")
 	@GetMapping("/{categoryId}")
-	public List<CategoryDTO> getSubCategoriesByParentId(
+	public AllCategoryResponse getParentAndSubCategories(
 		@PathVariable Long categoryId
 	) {
-		return categoryService.getSubCategoriesByParentId(categoryId);
+		return categoryService.getParentAndSubCategories(categoryId);
 	}
 }
