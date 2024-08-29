@@ -9,13 +9,13 @@ import com.pricewagon.pricewagon.domain.product.entity.ProductHistory;
 public record IndividualProductInfo(
 
 	BasicProductInfo basicProductInfo, // 메인 정보
-	ProductDetailDTO productDetailDTO, // 부과 정보
+	ProductDetailDTO productDetail, // 부과 정보
 	List<ProductHistory> productHistoryList // 가격 히스토리
 	) {
 
 	public static IndividualProductInfo from(Product product, ProductHistory latestHistory) {
 		BasicProductInfo basicInfo = BasicProductInfo.createHistoryOf(product, latestHistory);
-		ProductDetailDTO productDetailDTO = ProductDetailDTO.toDTO(product.getProductDetail());
-		return new IndividualProductInfo(basicInfo, productDetailDTO, product.getProductHistories());
+		ProductDetailDTO productDetail = ProductDetailDTO.toDTO(product.getProductDetail());
+		return new IndividualProductInfo(basicInfo, productDetail, product.getProductHistories());
 	}
 }
