@@ -1,17 +1,21 @@
 package com.pricewagon.pricewagon.domain.product.service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pricewagon.pricewagon.domain.product.dto.response.BasicProductInfo;
+import com.pricewagon.pricewagon.domain.product.dto.response.IndividualProductInfo;
 import com.pricewagon.pricewagon.domain.product.entity.Product;
 import com.pricewagon.pricewagon.domain.product.entity.ProductHistory;
 import com.pricewagon.pricewagon.domain.product.entity.ShopType;
 import com.pricewagon.pricewagon.domain.product.repository.ProductRepository;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -30,8 +34,26 @@ public class ProductService {
 					.findFirst() // 첫 번째 요소를 가져옵니다.
 					.orElse(null);
 
-				return BasicProductInfo.of(product, latestHistory);
+				return BasicProductInfo.createHistoryOf(product, latestHistory);
 			})
 			.toList();
+	}
+
+	@Transactional(readOnly = true)
+	public ResponseEntity<IndividualProductInfo> getIndividualProductInfo(ShopType shopType, Integer productNumber) {
+		Product product = productRepository.findByShopTypeAndProductNumber(shopType, productNumber)
+			.orElseThrow(() -> new RuntimeException("Product not found"));
+
+		ProductHistory latestHistory = getLatestProductHistory(product.getProductHistories())
+			.orElseThrow(() -> new RuntimeException("No ProductHistory found"));
+
+		IndividualProductInfo individualProductInfo = IndividualProductInfo.from(product, latestHistory);
+
+		return ResponseEntity.ok(individualProductInfo);
+	}
+
+	private Optional<ProductHistory> getLatestProductHistory(List<ProductHistory> productHistories) {
+		return productHistories.stream()
+			.max(Comparator.comparing(ProductHistory::getCreatedAt));
 	}
 }
