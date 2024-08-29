@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class ProductHistoryService {
 
+	// 최근 히스토리 반환
 	public ProductHistory getLatestHistory(Product product) {
 		return product.getProductHistories().stream()
 			.max(Comparator.comparing(ProductHistory::getCreatedAt)) // 가장 최근의 히스토리 가져오기

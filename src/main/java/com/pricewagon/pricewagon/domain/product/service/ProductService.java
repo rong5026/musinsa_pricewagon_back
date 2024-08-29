@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pricewagon.pricewagon.domain.category.entity.Category;
-import com.pricewagon.pricewagon.domain.category.repository.CategoryRepository;
+import com.pricewagon.pricewagon.domain.category.service.CategoryService;
 import com.pricewagon.pricewagon.domain.product.dto.response.BasicProductInfo;
 import com.pricewagon.pricewagon.domain.product.dto.response.IndividualProductInfo;
 import com.pricewagon.pricewagon.domain.product.entity.Product;
@@ -27,8 +27,8 @@ import lombok.RequiredArgsConstructor;
 public class ProductService {
 
 	private final ProductRepository productRepository;
-	private final CategoryRepository categoryRepository;
 	private final ProductHistoryService productHistoryService;
+	private final CategoryService categoryService;
 
 	@Transactional(readOnly = true)
 	public List<BasicProductInfo> getProductsByShopType(ShopType shopType, Pageable pageable) {
@@ -57,15 +57,15 @@ public class ProductService {
 
 	public List<BasicProductInfo> getBasicProductsByCategory(ShopType shopType, Pageable pageable, Long categoryId) {
 
-		Category parentCategory = categoryRepository.findById(categoryId)
-			.orElseThrow(() -> new RuntimeException("Category not found"));
+		Category parentCategory = categoryService.getCategoryById(categoryId);
 
-		List<Category> categories = categoryRepository.findByParentCategory_Id(categoryId);
-		categories.add(parentCategory);
+		List<Category> subCategories = categoryService.getSubcategoriesByParentId(categoryId);
+
+		subCategories.add(parentCategory);
 
 		// 카테고리 전체 목록 생성
 		List<Long> categoriesId = new ArrayList<>();
-		for (Category category : categories) {
+		for (Category category : subCategories) {
 			categoriesId.add(category.getId());
 		}
 
