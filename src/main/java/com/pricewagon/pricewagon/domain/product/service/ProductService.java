@@ -57,10 +57,10 @@ public class ProductService {
 
 	public List<BasicProductInfo> getBasicProductsByCategory(ShopType shopType, Pageable pageable, Long categoryId) {
 
+		// 상위 카테고리
 		Category parentCategory = categoryService.getCategoryById(categoryId);
-
-		List<Category> subCategories = categoryService.getSubcategoriesByParentId(categoryId);
-
+		// 하위 카테고리
+		List<Category> subCategories = categoryService.getSubCategories(categoryId);
 		subCategories.add(parentCategory);
 
 		// 카테고리 전체 목록 생성
