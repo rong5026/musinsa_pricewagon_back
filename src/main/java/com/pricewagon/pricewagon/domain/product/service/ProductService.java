@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -76,7 +75,7 @@ public class ProductService {
 				ProductHistory latestHistory = productHistoryService.getLatestHistory(product);
 				return BasicProductInfo.createHistoryOf(product, latestHistory);
 			})
-			.toList()
+			.toList();
 	}
 
 	private Optional<ProductHistory> getLatestProductHistory(List<ProductHistory> productHistories) {
