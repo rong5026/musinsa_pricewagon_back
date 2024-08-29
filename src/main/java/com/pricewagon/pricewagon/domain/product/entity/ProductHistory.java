@@ -2,6 +2,7 @@ package com.pricewagon.pricewagon.domain.product.entity;
 
 import org.hibernate.annotations.Comment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pricewagon.pricewagon.domain.common.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductHistory extends BaseEntity {
 	@Id
+	@JsonIgnore
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
@@ -28,8 +30,8 @@ public class ProductHistory extends BaseEntity {
 	@Column(nullable = false)
 	private Integer price;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
-
 }
