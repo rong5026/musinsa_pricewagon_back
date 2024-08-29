@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductController {
 	private final ProductService productService;
 
-	@Operation(summary = "전체상품 조회", description = "쇼핑몰별 모든 상품 조회")
+	@Operation(summary = "전체상품 조회", description = "쇼핑몰별 모든 상품")
 	@GetMapping("/{shopType}")
 	public List<BasicProductInfo> getProductsByShopType(
 		@PathVariable ShopType shopType,
@@ -41,6 +41,16 @@ public class ProductController {
 		@PathVariable Integer productNumber
 	) {
 		return productService.getIndividualProductInfo(shopType, productNumber);
+	}
+
+	@Operation(summary = "상위 카테고리 상품조회", description = "카테고리에 속한 기본 상품정보")
+	@GetMapping("/{shopType}/category/{categoryId}")
+	public List<BasicProductInfo> getBasicProductsByCategory(
+		@PathVariable ShopType shopType,
+		@PathVariable Long categoryId,
+		Pageable pageable
+	) {
+		return productService.getBasicProductsByCategory(shopType, pageable, categoryId);
 	}
 
 }
