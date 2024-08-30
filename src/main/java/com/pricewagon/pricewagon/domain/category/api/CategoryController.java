@@ -24,6 +24,6 @@ public class CategoryController {
 	public AllCategoryResponse getParentAndSubCategories(
 		@PathVariable Long categoryId
 	) {
-		return categoryService.getParentAndSubCategories(categoryId);
+		return categoryService.getParentAndSubCategoriesByParentId(categoryId);
 	}
 }

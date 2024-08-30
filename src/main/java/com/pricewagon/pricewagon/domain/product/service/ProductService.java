@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pricewagon.pricewagon.domain.category.dto.response.ParentAndChildCategoryDTO;
 import com.pricewagon.pricewagon.domain.category.entity.Category;
 import com.pricewagon.pricewagon.domain.category.service.CategoryService;
 import com.pricewagon.pricewagon.domain.product.dto.response.BasicProductInfo;
@@ -45,22 +46,27 @@ public class ProductService {
 	@Transactional(readOnly = true)
 	public ResponseEntity<IndividualProductInfo> getIndividualProductInfo(ShopType shopType, Integer productNumber) {
 		Product product = productRepository.findByShopTypeAndProductNumber(shopType, productNumber)
-			.orElseThrow(() -> new RuntimeException("Product not found"));
+			.orElseThrow(() -> new RuntimeException("존재하지 않는 상품입니다."));
 
 		ProductHistory latestHistory = getLatestProductHistory(product.getProductHistories())
-			.orElseThrow(() -> new RuntimeException("No ProductHistory found"));
+			.orElseThrow(() -> new RuntimeException("상품 가격 히스토리가 존재하지 않습니다."));
 
-		IndividualProductInfo individualProductInfo = IndividualProductInfo.from(product, latestHistory);
+		Category childCategory = product.getCategory();
+		ParentAndChildCategoryDTO parentAndChildCategoryDTO = categoryService
+			.getParentAndChildCategoriesByChildId(childCategory.getId());
+
+		IndividualProductInfo individualProductInfo = IndividualProductInfo.from(product, latestHistory, parentAndChildCategoryDTO);
+
 
 		return ResponseEntity.ok(individualProductInfo);
 	}
 
-	public List<BasicProductInfo> getBasicProductsByCategory(ShopType shopType, Pageable pageable, Long categoryId) {
+	public List<BasicProductInfo> getBasicProductsByCategory(ShopType shopType, Pageable pageable, Long parentCategoryId) {
 
 		// 상위 카테고리
-		Category parentCategory = categoryService.getCategoryById(categoryId);
+		Category parentCategory = categoryService.getCategoryById(parentCategoryId);
 		// 하위 카테고리
-		List<Category> subCategories = categoryService.getSubCategories(categoryId);
+		List<Category> subCategories = categoryService.getSubCategoriesByParentId(parentCategoryId);
 		subCategories.add(parentCategory);
 
 		// 카테고리 전체 목록 생성
