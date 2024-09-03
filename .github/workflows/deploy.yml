@@ -4,13 +4,14 @@ on:
   push:
     branches:
       - main
-      -
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -42,11 +43,18 @@ jobs:
           chmod +x ./deploy/deploy.sh
           zip -r -qq -j ./pricewagon-back-app.zip ./deploy
 
-      # zip 파일을 서버로 전송
-      - name: Copy zip file to remote server
-        run: scp -P ${{ secrets.SSH_PORT }} pricewagon-back-app.zip ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/home/hong/app/
+      # ZIP 파일 전송
+      - name: Transfer ZIP file use SCP
+        uses: appleboy/scp-action@master
+        with:
+          username: ${{ secrets.SSH_USERNAME }}
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "./pricewagon-back-app.zip"
+          target: "/home/hong/app"
 
-      # SSH 연결 후 프로젝트 업로드
+      # SSH 연결 후 배포 스크립트 실행
       - name: Execute SSH command on remote server
         uses: appleboy/ssh-action@master
         with:
@@ -55,7 +63,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /home/hong/app
+            REMOTE_DIR="/home/hong/app"
+            cd $REMOTE_DIR
             unzip -o pricewagon-back-app.zip
-            chmod +x ./deploy.sh
-            ./scripts/deploy.sh
+            chmod +x ./deploy/deploy.sh
+            ./deploy/deploy.sh
