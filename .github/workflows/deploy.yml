@@ -42,6 +42,10 @@ jobs:
           chmod +x ./deploy/deploy.sh
           zip -r -qq -j ./pricewagon-back-app.zip ./deploy
 
+      # zip 파일을 서버로 전송
+      - name: Copy zip file to remote server
+        run: scp -P ${{ secrets.SSH_PORT }} pricewagon-back-app.zip ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/home/hong/app/
+
       # SSH 연결 후 프로젝트 업로드
       - name: Execute SSH command on remote server
         uses: appleboy/ssh-action@master
@@ -51,10 +55,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            REMOTE_DIR="/home/hong/app/pricewagon-back"
-            mkdir -p $REMOTE_DIR
-            scp -P ${{ secrets.SSH_PORT }} pricewagon-back-app.zip ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:$REMOTE_DIR
-            cd $REMOTE_DIR
+            cd /home/hong/app
             unzip -o pricewagon-back-app.zip
             chmod +x ./deploy.sh
             ./scripts/deploy.sh
