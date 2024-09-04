@@ -45,7 +45,6 @@ jobs:
       - name: zip file 생성
         run: |
           mkdir deploy
-          cp ./.env ./deploy/
           cp ./docker/Dockerfile ./deploy/
           cp ./scripts/*.sh ./deploy/
           cp ./build/libs/*.jar ./deploy/
