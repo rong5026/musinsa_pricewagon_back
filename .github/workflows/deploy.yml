@@ -37,6 +37,7 @@ jobs:
       - name: zip file 생성
         run: |
           mkdir deploy
+          cp ./.env ./deploy/
           cp ./docker/Dockerfile ./deploy/
           cp ./scripts/*.sh ./deploy/
           cp ./build/libs/*.jar ./deploy/
@@ -52,19 +53,19 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           source: "./pricewagon-back-app.zip"
-          target: "/home/hong/app"
+          target: "/home/hong/app/pricewagon-back"
 
-      # SSH 연결 후 배포 스크립트 실행
-      - name: Execute SSH command on remote server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            REMOTE_DIR="/home/hong/app"
-            cd $REMOTE_DIR
-            unzip -o pricewagon-back-app.zip
-            chmod +x ./deploy/deploy.sh
-            ./deploy/deploy.sh
+#      # SSH 연결 후 배포 스크립트 실행
+#      - name: Execute SSH command on remote server
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.SSH_HOST }}
+#          username: ${{ secrets.SSH_USERNAME }}
+#          key: ${{ secrets.SSH_KEY }}
+#          port: ${{ secrets.SSH_PORT }}
+#          script: |
+#            REMOTE_DIR="/home/hong/app"
+#            cd $REMOTE_DIR
+#            unzip -o pricewagon-back-app.zip
+#            chmod +x ./deploy/deploy.sh
+#            ./deploy/deploy.sh
