@@ -14,12 +14,13 @@ public record BasicProductInfo(
 	 String imgUrl,
 	 ShopType shopType,
 	 Integer originPrice,
-	 Integer salePrice
+	 Integer salePrice,
+	 Integer previousPrice
 	 // String categoryName,
 	 // String parentCategoryName
 
 ) {
-	public static BasicProductInfo createHistoryOf (Product product, ProductHistory productHistory) {
+	public static BasicProductInfo createHistoryOf (Product product, ProductHistory productHistory, Integer previousPrice) {
 		return new BasicProductInfo(
 			product.getProductNumber(),
 			product.getName(),
@@ -30,7 +31,8 @@ public record BasicProductInfo(
 			product.getImgUrl(),
 			product.getShopType(),
 			product.getOriginPrice(),
-			productHistory != null ? productHistory.getPrice() : 0
+			productHistory != null ? productHistory.getPrice() : 0,
+			previousPrice
 			// product.getCategory() != null ? product.getCategory().getCategoryName() : null ,
 			// product.getCategory().getParentCategory() != null ? product.getCategory().getParentCategory().getCategoryName() : null
 		);
