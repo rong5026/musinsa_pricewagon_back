@@ -12,12 +12,11 @@ public record IndividualProductInfo(
 	BasicProductInfo basicProductInfo, // 메인 정보
 	ProductDetailDTO productDetail, // 부과 정보
 	List<ProductHistory> productHistoryList, // 가격 히스토리
-	ParentAndChildCategoryDTO parentAndChildCategoryDTO
+	ParentAndChildCategoryDTO parentAndChildCategoryDTO // 카테고리
 	) {
 
-	public static IndividualProductInfo from(Product product, ProductHistory latestHistory, ParentAndChildCategoryDTO parentAndChildCategoryDTO) {
-		BasicProductInfo basicInfo = BasicProductInfo.createHistoryOf(product, latestHistory);
+	public static IndividualProductInfo from(Product product, BasicProductInfo basicProductInfo, ParentAndChildCategoryDTO parentAndChildCategoryDTO) {
 		ProductDetailDTO productDetail = ProductDetailDTO.toDTO(product.getProductDetail());
-		return new IndividualProductInfo(basicInfo, productDetail, product.getProductHistories(), parentAndChildCategoryDTO);
+		return new IndividualProductInfo(basicProductInfo, productDetail, product.getProductHistories(), parentAndChildCategoryDTO);
 	}
 }
