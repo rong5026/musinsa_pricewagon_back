@@ -1,12 +1,11 @@
 #!/bin/bash
 
-APP_NAME="PRICEWAGON"
 REPOSITORY="/home/hong/app/pricewagon-back"
 LOG_PATH="$REPOSITORY/deploy.log"
 JAR_NAME=$(ls $REPOSITORY | grep '.jar' | tail -n 1)
 JAR_PATH="$REPOSITORY/$JAR_NAME"
 
-CURRENT_PID=$(pgrep -f $APP_NAME)
+CURRENT_PID=$(pgrep -f $JAR_NAME)
 
 # 로그 파일 생성 (없을 시) 및 시작 로그 기록
 if [ ! -f "$LOG_PATH" ]; then
@@ -26,7 +25,7 @@ else
   sleep 5
 
   # 프로세스가 종료되었는지 확인
-  CURRENT_PID=$(pgrep -f $APP_NAME)
+  CURRENT_PID=$(pgrep -f $JAR_NAME)
   if [ -z "$CURRENT_PID" ]; then
     echo "> 애플리케이션이 정상적으로 종료되었습니다." >> "$LOG_PATH"
   else
@@ -39,7 +38,7 @@ fi
 echo "> 새 애플리케이션 배포: $JAR_PATH" >> "$LOG_PATH"
 nohup java -jar -Dspring.profiles.active=prod "$JAR_PATH" > "$REPOSITORY/nohup.out" 2>&1 &
 
-NEW_PID=$(pgrep -f $APP_NAME)
+NEW_PID=$(pgrep -f $JAR_NAME)
 if [ -z "$NEW_PID" ]; then
   echo "> 애플리케이션 실행 실패" >> "$LOG_PATH"
 else
