@@ -1,9 +1,10 @@
-APP_NAME="PRICEWAGON"   # 애플리케이션 이름
-REPOSITORY="/home/hong/app/pricewagon-back"   # 배포 경로
-JAR_NAME=$(ls $REPOSITORY | grep '.jar' | tail -n 1)   # 가장 최신의 JAR 파일
-JAR_PATH="$REPOSITORY/$JAR_NAME"   # JAR 파일 경로
+#!/bin/bash
 
-# 현재 실행 중인 애플리케이션 PID 확인 (grep으로 정확하게 찾아서 프로세스를 확인)
+APP_NAME="PRICEWAGON"
+REPOSITORY="/home/hong/app/pricewagon-back"
+JAR_NAME=$(ls $REPOSITORY | grep '.jar' | tail -n 1)
+JAR_PATH="$REPOSITORY/$JAR_NAME"
+
 CURRENT_PID=$(pgrep -f $APP_NAME)
 
 # 현재 실행 중인 애플리케이션 종료

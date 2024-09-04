@@ -13,7 +13,6 @@ spring:
         format_sql: true
     show-sql: true
 
-
 # 로깅 설정
 logging:
   level:
@@ -23,3 +22,11 @@ logging:
         orm:
           jdbc:
             bind: trace
+server:
+  port: 8000
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
