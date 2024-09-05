@@ -3,7 +3,7 @@
 # 작업 디렉토리 설정
 cd /home/hong/app/pricewagon-back
 
-DOCKER_APP_NAME=pricewagon-blue-green
+DOCKER_APP_NAME=pricewagon_blue_green
 
 DEPLOY_LOG="/home/hong/app/blue-grenn-deploy.log"  # 로그 파일 경로를 변수로 설정
 
