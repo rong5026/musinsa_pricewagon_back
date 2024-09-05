@@ -61,7 +61,6 @@ public class ProductService {
 
 		IndividualProductInfo individualProductInfo = IndividualProductInfo.from(product, basicProductInfo, parentAndChildCategoryDTO);
 
-
 		return ResponseEntity.ok(individualProductInfo);
 	}
 
