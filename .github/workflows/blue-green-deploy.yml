@@ -1,0 +1,77 @@
+name: BackEnd - Blue/Green - CD
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 프로젝트 저장소에 업로드하면 안되는 설정 파일들을 만들어줍니다.
+      - name: Make application.yml
+        run: |
+          cd ./src/main/resources
+          touch ./application.yml
+          touch ./application-datasource.yml
+          touch ./application-prod.yml
+          
+          echo "$APPLICATION" > ./application.yml
+          echo "$APPLICATION_DATASOURCE" > ./application-datasource.yml
+          echo "$APPLICATION_PROD" > ./application-prod.yml
+        env:
+          APPLICATION: ${{ secrets.APPLICATION }}
+          APPLICATION_DATASOURCE: ${{ secrets.APPLICATION_DATASOURCE }}
+          APPLICATION_PROD: ${{ secrets.APPLICATION_PROD }}
+        shell: bash
+
+      - name: Gradle 권한 부여
+        run: chmod +x gradlew
+
+      - name: Gradle로 빌드 실행
+        run: ./gradlew bootjar
+
+      # 배포에 필요한 여러 설정 파일과 프로젝트 빌드파일을 zip 파일로 모아줍니다.
+      - name: zip file 생성
+        run: |
+          mkdir deploy
+          cp ./docker/Dockerfile ./deploy/
+          cp ./scripts/*.sh ./deploy/
+          cp ./build/libs/*.jar ./deploy/
+          chmod +x ./deploy/blue-green-deploy.sh
+          zip -r -qq -j ./pricewagon-back-app.zip ./deploy
+
+      # ZIP 파일 전송
+      - name: Transfer ZIP file use SCP
+        uses: appleboy/scp-action@master
+        with:
+          username: ${{ secrets.SSH_USERNAME }}
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "./pricewagon-back-app.zip"
+          target: "/home/hong/app/pricewagon-back"
+
+      # SSH 연결 후 배포 스크립트 실행
+      - name: Execute SSH command on remote server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            REMOTE_DIR="/home/hong/app/pricewagon-back"
+            cd $REMOTE_DIR
+            unzip -o pricewagon-back-app.zip
+            ./blue-green-deploy.sh
