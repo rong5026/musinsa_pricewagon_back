@@ -4,7 +4,7 @@
 cd /home/hong/app/pricewagon-back
 
 # DOCKER_APP_NAME이 비어있으면 기본값을 설정
-DOCKER_APP_NAME=${DOCKER_APP_NAME:-pricewagon}
+DOCKER_APP_NAME=pricewagon
 
 DEPLOY_LOG="/home/hong/app/blue-green-deploy.log"  # 로그 파일 경로를 변수로 설정
 
@@ -19,7 +19,7 @@ if [ -z "$EXIST_BLUE" ]; then
   echo "blue 배포 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>  $DEPLOY_LOG
 
   # blue 배포
-  sudo docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml up -d --build
+  sudo docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml up -d --build >>  $DEPLOY_LOG
 
   # 컨테이너 실행 확인
   for i in {1..6}; do
