@@ -19,7 +19,7 @@ if [ -z "$EXIST_BLUE" ]; then
   echo "blue 배포 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>  $DEPLOY_LOG
 
   # blue 배포
-  sudo docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml up -d --build >>  $DEPLOY_LOG
+  sudo docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml up -d --build
 
   # 컨테이너 실행 확인
   for i in {1..6}; do
