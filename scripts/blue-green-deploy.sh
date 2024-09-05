@@ -6,6 +6,7 @@ cd /home/hong/app/pricewagon-back
 # DOCKER_APP_NAME이 비어있으면 기본값을 설정
 DOCKER_APP_NAME=pricewagon
 
+
 DEPLOY_LOG="/home/hong/app/blue-green-deploy.log"  # 로그 파일 경로를 변수로 설정
 
 # 실행중인 blue가 있는지 확인
