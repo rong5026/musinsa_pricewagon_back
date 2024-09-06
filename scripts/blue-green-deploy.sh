@@ -55,6 +55,7 @@ for i in {1..6}; do
   fi
 done
 
+
 if [ -z "$GREEN_HEALTH" ]; then
   echo "green 배포 도중 실패 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
 else
