@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## Blue/Green 배포 스크립트
+
+
 # 작업 디렉토리 설정
 cd /home/hong/app/pricewagon-blue-green
 
