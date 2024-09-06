@@ -26,6 +26,9 @@ services:
   nginx:
     image: nginx:latest
     container_name: nginx-proxy
+    build:
+      context: .
+      dockerfile: Dockerfile-Nginx
     ports:
       - "8000:80"
     networks:
