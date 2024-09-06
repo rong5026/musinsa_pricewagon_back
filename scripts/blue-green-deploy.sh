@@ -17,7 +17,7 @@ EXIST_NGINX=$(docker ps --filter "name=nginx-proxy" --filter "status=running" -q
 
 
 # 현재 실행 중인 컨테이너가 Blue인지 Green인지 확인하여 Nginx 설정 변경
-if [ -n "$EXIST_BLUE" ]; then
+if [ -z "$EXIST_BLUE" ]; then
     sed -i 's/spring-green-container:8080/spring-blue-container:8080/g' $NGINX_CONFIG
 else
     sed -i 's/spring-blue-container:8080/spring-green-container:8080/g' $NGINX_CONFIG
