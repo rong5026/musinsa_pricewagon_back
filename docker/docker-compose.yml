@@ -1,7 +1,7 @@
 services:
   spring-blue:
     image: spring-blue-image
-    container_name: spring-blue
+    container_name: spring-blue-container
     build:
       context: .
       dockerfile: Dockerfile
@@ -14,7 +14,7 @@ services:
 
   spring-green:
     image: spring-green-image
-    container_name: spring-green
+    container_name: spring-green-container
     build:
       context: .
       dockerfile: Dockerfile
