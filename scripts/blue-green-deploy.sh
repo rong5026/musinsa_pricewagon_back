@@ -10,7 +10,8 @@ DOCKER_APP_NAME=pricewagon
 
 DEPLOY_LOG="/home/hong/app/blue-green-deploy.log"  # 로그 파일 경로를 변수로 설정
 
-NGINX_CONFIG="/home/hong/app/pricewagon-blue-green/nginx.conf"
+# Nginx 컨테이너 내부의 설정 파일 경로
+NGINX_CONFIG="/etc/nginx/nginx.conf"
 
 # 실행 중인 blue가 있는지 확인
 EXIST_BLUE=$(docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml ps | grep spring-blue-container | grep Up)
