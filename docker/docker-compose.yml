@@ -35,3 +35,4 @@ networks:
   shared-network:
     name: pricewagon-network  # 고정된 네트워크 이름을 지정
     driver: bridge
+    external: true  # 이미 존재하는 네트워크를 재사용하도록 설정
