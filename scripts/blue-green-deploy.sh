@@ -7,6 +7,7 @@ cd /home/hong/app/pricewagon-blue-green
 DOCKER_APP_NAME=pricewagon
 
 DEPLOY_LOG="/home/hong/app/blue-green-deploy.log"  # 로그 파일 경로를 변수로 설정
+NGINX_CONFIG="/home/hong/app/pricewagon-blue-green/nginx.conf"
 
 # 실행중인 blue가 있는지 확인
 EXIST_BLUE=$(docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml ps | grep spring-blue-container | grep Up)
@@ -33,6 +34,11 @@ if [ -z "$EXIST_BLUE" ]; then
   if [ -z "$BLUE_HEALTH" ]; then
     echo "blue 배포 도중 실패 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
   else
+    # Nginx 설정에서 blue을 사용하도록 변경
+    sed -i 's/spring-green:8082/spring-blue:8081/g' $NGINX_CONFIG
+    docker-compose -p nginx-proxy -f docker-compose.yml restart nginx
+    echo "Nginx가 blue로 업데이트됨" >> $DEPLOY_LOG
+
     echo "green 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
     docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.yml stop spring-green
     docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.yml rm -f spring-green
@@ -55,6 +61,11 @@ else
   if [ -z "$GREEN_HEALTH" ]; then
     echo "green 배포 도중 실패 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
   else
+    # Nginx 설정에서 green을 사용하도록 변경
+    sed -i 's/spring-blue:8081/spring-green:8082/g' $NGINX_CONFIG
+    docker-compose -p nginx-proxy -f docker-compose.yml restart nginx
+    echo "Nginx가 green로 업데이트됨" >> $DEPLOY_LOG
+
     echo "blue 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
     docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml stop spring-blue
     docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml rm -f spring-blue
