@@ -35,7 +35,7 @@ if [ -z "$EXIST_BLUE" ]; then
     echo "blue 배포 도중 실패 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
   else
     echo "green 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
-    docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.yml stop spring-green
+    docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.yml down spring-green
     docker image prune -af
     echo "green 중단 완료 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>  $DEPLOY_LOG
   fi
@@ -57,7 +57,7 @@ else
     echo "green 배포 도중 실패 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
   else
     echo "blue 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
-    docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml stop spring-blue
+    docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml down spring-blue
     docker image prune -af
     echo "blue 중단 완료 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
   fi

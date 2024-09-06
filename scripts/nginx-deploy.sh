@@ -30,3 +30,4 @@ fi
 
 # 배포 종료 시간 기록
 echo "Nginx 배포 종료: $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
+cho "===================== 배포 완료 =====================" >>  $DEPLOY_LOG
