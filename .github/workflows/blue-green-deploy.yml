@@ -3,7 +3,7 @@ name: BackEnd - Blue/Green - CD
 on:
   push:
     branches:
-      - develop
+      - cicd
 
 jobs:
   deploy:
@@ -45,9 +45,9 @@ jobs:
       - name: zip file 생성
         run: |
           mkdir deploy
-          cp ./docker/docker-compose.blue.yml ./deploy/
-          cp ./docker/docker-compose.green.yml ./deploy/
-          cp ./docker/docker-compose.nginx.yml ./deploy/
+          cp ./docker/docker-compose.yml ./deploy/
+#          cp ./docker/docker-compose.green.yml ./deploy/
+#          cp ./docker/docker-compose.nginx.yml ./deploy/
           cp ./docker/Dockerfile ./deploy/
           cp ./scripts/*.sh ./deploy/
           cp ./build/libs/*.jar ./deploy/
