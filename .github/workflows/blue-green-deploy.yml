@@ -78,4 +78,3 @@ jobs:
             cd $REMOTE_DIR
             unzip -o pricewagon-blue-green-app.zip
             ./blue-green-deploy.sh
-#            ./nginx-deploy.sh
