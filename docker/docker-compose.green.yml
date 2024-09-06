@@ -1,11 +1,9 @@
 #green
-version: '3'
 services:
   backend:
     # 현재 디렉토리에서의 Dockerfile을 사용하여 Docker 이미지를 빌드
     build: .
     # 호스트의 8082 포트와 컨테이너의 80 포트를 매핑
-
     ports:
       - "8082:8080"
     container_name: spring-green

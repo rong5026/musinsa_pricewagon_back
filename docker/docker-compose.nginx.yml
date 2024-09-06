@@ -1,0 +1,11 @@
+services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - spring-blue
+      - spring-green
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
