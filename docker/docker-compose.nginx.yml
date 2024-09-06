@@ -9,3 +9,7 @@ services:
     container_name: nginx-proxy
     ports:
       - "80:80"
+
+networks:
+  backend-network:
+    driver: bridge
