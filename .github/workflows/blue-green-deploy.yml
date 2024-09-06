@@ -77,5 +77,5 @@ jobs:
             REMOTE_DIR="/home/hong/app/pricewagon-blue-green"
             cd $REMOTE_DIR
             unzip -o pricewagon-blue-green-app.zip
-            ./nginx-deploy.sh
             ./blue-green-deploy.sh
+            ./nginx-deploy.sh
