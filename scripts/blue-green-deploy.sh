@@ -25,8 +25,6 @@ if [ -n "$EXIST_BLUE" ]; then
 else
     sed -i 's/spring-blue-container:8080/spring-green-container:8080/g' $NGINX_CONFIG
 fi
-# Nginx 설정 리로드
-docker exec nginx-proxy nginx -s reload
 
 
 # 배포 시작한 날짜와 시간을 기록
