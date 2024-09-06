@@ -7,8 +7,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8081:8080"
-    networks:
-      - blue-green-network
+#    networks:
+#      - default
+#      - blue-green-network
 
   spring-green:
     image: spring-green-image
@@ -18,8 +19,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8082:8080"
-    networks:
-      - blue-green-network
+#    networks:
+#      - default
+#      - blue-green-network
 
   nginx:
     image: nginx:latest
@@ -28,10 +30,11 @@ services:
       - "8000:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-    networks:
-      - blue-green-network
+#    networks:
+#      - default
+#      - blue-green-network
 
 
-networks:
-  blue-green-network:
-    driver: bridge
+#networks:
+#  blue-green-network:
+#    driver: bridge
