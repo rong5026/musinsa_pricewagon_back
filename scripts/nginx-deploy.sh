@@ -10,7 +10,7 @@ DOCKER_APP_NAME=nginx-proxy
 echo "Nginx 배포 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
 
 # Nginx 컨테이너가 이미 실행 중인지 확인
-EXIST_NGINX=$(sudo docker ps | grep nginx-proxy)
+EXIST_NGINX=$(docker ps | grep nginx-proxy)
 
 if [ -z "$EXIST_NGINX" ]; then
   # Nginx가 실행 중이 아닌 경우, 새로 배포
