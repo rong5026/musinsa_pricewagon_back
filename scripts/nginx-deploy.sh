@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /home/hong/app/pricewagon-back
+cd /home/hong/app/pricewagon-blue-green
 
 # 로그 파일 경로 설정
 DEPLOY_LOG="/home/hong/app/nginx-deploy.log"
