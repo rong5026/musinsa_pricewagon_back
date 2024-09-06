@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 작업 디렉토리 설정
-cd /home/hong/app/pricewagon-back
+cd /home/hong/app/pricewagon-blue-green
 
 # DOCKER_APP_NAME이 비어있으면 기본값을 설정
 DOCKER_APP_NAME=pricewagon
