@@ -34,7 +34,7 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - spring-blue
-      - spring-green
+#      - spring-green
     networks:
       - blue-green-network
 
