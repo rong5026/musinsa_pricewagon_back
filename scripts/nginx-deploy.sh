@@ -31,3 +31,15 @@ fi
 # 배포 종료 시간 기록
 echo "Nginx 배포 종료: $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
 echo "===================== 배포 완료 =====================" >>  $DEPLOY_LOG
+
+
+
+## Nginx가 이미 실행 중인지 확인
+#EXIST_NGINX=$(docker-compose -p ${DOCKER_APP_NAME} -f docker-compose.yml ps | grep nginx-proxy | grep Up)
+#
+#if [ -z "$EXIST_NGINX" ]; then
+#  echo "Nginx 실행" >> $DEPLOY_LOG
+#  docker-compose -p ${DOCKER_APP_NAME} -f docker-compose.yml up -d --build nginx
+#else
+#  echo "Nginx 이미 실행 중" >> $DEPLOY_LOG
+#fi
