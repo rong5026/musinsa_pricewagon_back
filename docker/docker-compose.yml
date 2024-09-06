@@ -1,3 +1,5 @@
+## Blue/Green 배포 스크립트
+
 services:
   spring-blue:
     image: spring-blue-image
