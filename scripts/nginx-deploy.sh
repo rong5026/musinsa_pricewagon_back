@@ -18,6 +18,15 @@ if [ -z "$EXIST_NGINX" ]; then
   docker-compose -p ${DOCKER_APP_NAME} -f docker-compose.nginx.yml up -d --build nginx
 
   # Nginx 컨테이너 실행 확인
-  NGINX_STATUS=$( docker-compose  -p ${DOCKER_APP_NAME} -f docker-compose.nginx.yml ps | grep nginx-proxy | grep Up)
+  NGINX_STATUS=$(docker-compose -p ${DOCKER_APP_NAME} -f docker-compose.nginx.yml ps | grep nginx-proxy | grep Up)
   if [ -z "$NGINX_STATUS" ]; then
     echo "Nginx 배포 실패: $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
+  else
+    echo "Nginx 배포 성공: $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
+  fi
+else
+  echo "Nginx 컨테이너가 이미 실행 중입니다." >> $DEPLOY_LOG
+fi
+
+# 배포 종료 시간 기록
+echo "Nginx 배포 종료: $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
