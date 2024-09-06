@@ -9,3 +9,6 @@ services:
     container_name: spring-green
     environment:
       - TZ=Asia/Seoul
+networks:
+  backend-network:
+    driver: bridge
