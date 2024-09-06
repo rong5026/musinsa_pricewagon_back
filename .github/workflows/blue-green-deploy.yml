@@ -49,6 +49,7 @@ jobs:
           cp ./docker/Dockerfile ./deploy/
           cp ./scripts/*.sh ./deploy/
           cp ./build/libs/*.jar ./deploy/
+          cp ./config/nginx.conf ./deploy/
           chmod +x ./deploy/blue-green-deploy.sh
           chmod +x ./deploy/nginx-deploy.sh
           zip -r -qq -j ./pricewagon-blue-green-app.zip ./deploy
