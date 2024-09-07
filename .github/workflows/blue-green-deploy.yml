@@ -3,7 +3,7 @@ name: BackEnd - Blue/Green - CD
 on:
   push:
     branches:
-      - cicd
+      - main
 
 jobs:
   deploy:
