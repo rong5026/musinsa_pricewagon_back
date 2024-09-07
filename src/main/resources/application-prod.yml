@@ -22,11 +22,3 @@ logging:
         orm:
           jdbc:
             bind: trace
-server:
-  port: 8000
-  servlet:
-    context-path: /
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
