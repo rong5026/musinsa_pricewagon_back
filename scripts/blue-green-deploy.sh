@@ -1,16 +1,32 @@
 #!/bin/bash
 
+## Blue/Green 배포 스크립트
+
 # 작업 디렉토리 설정
 cd /home/hong/app/pricewagon-blue-green
 
 # DOCKER_APP_NAME이 비어있으면 기본값을 설정
 DOCKER_APP_NAME=pricewagon
 
-
 DEPLOY_LOG="/home/hong/app/blue-green-deploy.log"  # 로그 파일 경로를 변수로 설정
 
-# 실행중인 blue가 있는지 확인
-EXIST_BLUE=$(docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml ps | grep Up)
+# Nginx 컨테이너 내부의 설정 파일 경로
+NGINX_CONFIG="/etc/nginx/nginx.conf"
+
+# 실행 중인 blue가 있는지 확인
+EXIST_BLUE=$(docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml ps | grep spring-blue-container | grep Up)
+# Nginx 컨테이너가 이미 실행 중인지 확인
+EXIST_NGINX=$(docker ps --filter "name=nginx-proxy" --filter "status=running" -q)
+
+
+# 현재 실행 중인 컨테이너가 Blue인지 Green인지 확인하여 Nginx 설정 변경
+if [ -z "$EXIST_BLUE" ]; then
+    # Blue가 실행 중이 아닌 경우 Nginx 설정을 Blue로 변경
+    docker exec nginx-proxy sed -i 's/spring-green-container:8080/spring-blue-container:8080/g' $NGINX_CONFIG
+else
+    # Green이 실행 중인 경우 Nginx 설정을 Green으로 변경
+    docker exec nginx-proxy sed -i 's/spring-blue-container:8080/spring-green-container:8080/g' $NGINX_CONFIG
+fi
 
 # 배포 시작한 날짜와 시간을 기록
 echo "배포 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
@@ -20,12 +36,12 @@ if [ -z "$EXIST_BLUE" ]; then
   echo "blue 배포 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>  $DEPLOY_LOG
 
   # blue 배포
-  docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml up -d --build
+  docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml up -d --build spring-blue
 
   # 컨테이너 실행 확인
   for i in {1..6}; do
     sleep 7
-    BLUE_HEALTH=$(docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml ps | grep Up)
+   BLUE_HEALTH=$(docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml ps  | grep spring-blue-container | grep Up)
     if [ -n "$BLUE_HEALTH" ]; then
       break
     fi
@@ -34,20 +50,33 @@ if [ -z "$EXIST_BLUE" ]; then
   if [ -z "$BLUE_HEALTH" ]; then
     echo "blue 배포 도중 실패 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
   else
+
+    # Nginx가 실행 중이지 않으면 시작
+    if [ -z "$EXIST_NGINX" ]; then
+      echo "Nginx 처음 실행 중..." >> $DEPLOY_LOG
+      docker-compose -p ${DOCKER_APP_NAME} -f docker-compose.yml up -d --build nginx
+      echo "Nginx Cerbot SSL 적용 중 ..." >> $DEPLOY_LOG
+      ./ssl.sh
+    fi
+
+    # Nginx 재시작 또는 설정 리로드
+    echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
+    docker exec nginx-proxy nginx -s reload
+
     echo "green 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
-    docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.green.yml down
-    docker image prune -af
+    docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.yml stop spring-green
+    docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.yml rm -f spring-green
     echo "green 중단 완료 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>  $DEPLOY_LOG
   fi
 
 # blue가 실행중이면 green up
 else
   echo "green 배포 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>  $DEPLOY_LOG
-  docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.green.yml up -d --build
+  docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.yml up -d --build spring-green
 
   for i in {1..6}; do
     sleep 7
-    GREEN_HEALTH=$(docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.green.yml ps | grep Up)
+    GREEN_HEALTH=$(docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.yml ps | grep spring-green-container | grep Up)
     if [ -n "$GREEN_HEALTH" ]; then
       break
     fi
@@ -56,9 +85,22 @@ else
   if [ -z "$GREEN_HEALTH" ]; then
     echo "green 배포 도중 실패 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
   else
+
+    # Nginx가 실행 중이지 않으면 시작
+    if [ -z "$EXIST_NGINX" ]; then
+      echo "Nginx 처음 실행 중..." >> $DEPLOY_LOG
+      docker-compose -p ${DOCKER_APP_NAME} -f docker-compose.yml up -d --build nginx
+      echo "Nginx Cerbot SSL 적용 중 ..." >> $DEPLOY_LOG
+      ./ssl.sh
+    fi
+
+    # Nginx 재시작 또는 설정 리로드
+    echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
+    docker exec nginx-proxy nginx -s reload
+
     echo "blue 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
-    docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml down
-    docker image prune -af
+    docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml stop spring-blue
+    docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml rm -f spring-blue
     echo "blue 중단 완료 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
   fi
 
