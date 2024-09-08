@@ -1,7 +1,6 @@
 package com.pricewagon.pricewagon.domain.product.dto.response;
 
 import com.pricewagon.pricewagon.domain.product.entity.Product;
-import com.pricewagon.pricewagon.domain.product.entity.ProductHistory;
 import com.pricewagon.pricewagon.domain.product.entity.ShopType;
 
 public record BasicProductInfo(
@@ -13,14 +12,11 @@ public record BasicProductInfo(
 	 Integer likeCount,
 	 String imgUrl,
 	 ShopType shopType,
-	 Integer originPrice,
-	 Integer salePrice,
+	 Integer currentPrice,
 	 Integer previousPrice
-	 // String categoryName,
-	 // String parentCategoryName
 
 ) {
-	public static BasicProductInfo createHistoryOf (Product product, ProductHistory productHistory, Integer previousPrice) {
+	public static BasicProductInfo createHistoryOf (Product product, Integer previousPrice) {
 		return new BasicProductInfo(
 			product.getProductNumber(),
 			product.getName(),
@@ -30,11 +26,8 @@ public record BasicProductInfo(
 			product.getLikeCount(),
 			product.getImgUrl(),
 			product.getShopType(),
-			product.getOriginPrice(),
-			productHistory != null ? productHistory.getPrice() : 0,
+			product.getCurrentPrice(),
 			previousPrice
-			// product.getCategory() != null ? product.getCategory().getCategoryName() : null ,
-			// product.getCategory().getParentCategory() != null ? product.getCategory().getParentCategory().getCategoryName() : null
 		);
 	}
 }
