@@ -50,9 +50,9 @@ public class Product extends BaseAuditEntity {
 	@Column(length = 100, nullable = false)
 	private String brand;
 
-	@Comment("원가")
+	@Comment("판매가")
 	@Column(nullable = false)
-	private Integer originPrice;
+	private Integer currentPrice;
 
 	@Comment("별점")
 	@Column(nullable = false)
