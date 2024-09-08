@@ -1,10 +1,6 @@
 #!/bin/bash
 
-
-cd /home/hong/app/pricewagon-blue-green
-
 DEPLOY_LOG="/home/hong/app/ssl.log"  # 로그 파일 경로를 변수로 설정
-
 
 # 도커 컴포즈 설치 여부 확인
 if ! [ -x "$(command -v docker-compose)" ]; then
@@ -12,7 +8,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(example.org www.example.org)
+domains=rong5026.iptime.org
 rsa_key_size=4096
 data_path="./data/certbot"
 email="rong5026@naver.com" # Adding a valid address is strongly recommended
