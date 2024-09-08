@@ -55,6 +55,8 @@ if [ -z "$EXIST_BLUE" ]; then
     if [ -z "$EXIST_NGINX" ]; then
       echo "Nginx 처음 실행 중..." >> $DEPLOY_LOG
       docker-compose -p ${DOCKER_APP_NAME} -f docker-compose.yml up -d --build nginx
+      echo "Nginx Cerbot SSL 적용 중 ..." >> $DEPLOY_LOG
+      ./ssl.sh
     fi
 
     # Nginx 재시작 또는 설정 리로드
@@ -88,6 +90,8 @@ else
     if [ -z "$EXIST_NGINX" ]; then
       echo "Nginx 처음 실행 중..." >> $DEPLOY_LOG
       docker-compose -p ${DOCKER_APP_NAME} -f docker-compose.yml up -d --build nginx
+      echo "Nginx Cerbot SSL 적용 중 ..." >> $DEPLOY_LOG
+      ./ssl.sh
     fi
 
     # Nginx 재시작 또는 설정 리로드
