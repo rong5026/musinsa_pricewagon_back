@@ -52,7 +52,7 @@ jobs:
           cp ./build/libs/*.jar ./deploy/
           cp ./config/nginx.conf ./deploy/
           chmod +x ./deploy/blue-green-deploy.sh
-          chmod +x ./deploy/ssh.sh
+          chmod +x ./deploy/ssl.sh
           zip -r -qq -j ./pricewagon-blue-green-app.zip ./deploy
 
       # ZIP 파일 전송
