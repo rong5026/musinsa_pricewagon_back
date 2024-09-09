@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.pricewagon.pricewagon.domain.category.dto.response.ParentAndChildCategoryDTO;
 import com.pricewagon.pricewagon.domain.category.entity.Category;
 import com.pricewagon.pricewagon.domain.category.service.CategoryService;
+import com.pricewagon.pricewagon.domain.product.dto.request.ProductUrlRequest;
 import com.pricewagon.pricewagon.domain.product.dto.response.BasicProductInfo;
 import com.pricewagon.pricewagon.domain.product.dto.response.IndividualProductInfo;
 import com.pricewagon.pricewagon.domain.product.entity.Product;
@@ -81,5 +82,9 @@ public class ProductService {
 				return BasicProductInfo.createHistoryOf(product, previousPrice);
 			})
 			.toList();
+	}
+
+	public void registerProductURL(ProductUrlRequest request) {
+
 	}
 }
