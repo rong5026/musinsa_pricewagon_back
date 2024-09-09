@@ -34,7 +34,7 @@ public class ProductService {
 
 		return products.stream()
 			.map(product -> {
-				Integer previousPrice = productHistoryService.getDistinctOrLatestPriceByProductId(product.getId());
+				Integer previousPrice = productHistoryService.getDifferentLatestPriceByProductId(product);
 				return BasicProductInfo.createHistoryOf(product, previousPrice);
 			})
 			.toList();
@@ -49,7 +49,7 @@ public class ProductService {
 		ParentAndChildCategoryDTO parentAndChildCategoryDTO = categoryService
 			.getParentAndChildCategoriesByChildId(childCategory.getId());
 
-		Integer previousPrice = productHistoryService.getDistinctOrLatestPriceByProductId(product.getId());
+		Integer previousPrice = productHistoryService.getDifferentLatestPriceByProductId(product);
 		BasicProductInfo basicProductInfo = BasicProductInfo.createHistoryOf(product, previousPrice);
 
 		IndividualProductInfo individualProductInfo = IndividualProductInfo.from(product, basicProductInfo, parentAndChildCategoryDTO);
@@ -74,7 +74,7 @@ public class ProductService {
 		return productRepository.findByShopTypeAndCategory_IdIn(shopType, categoriesId, pageable)
 			.stream()
 			.map(product -> {
-				Integer previousPrice = productHistoryService.getDistinctOrLatestPriceByProductId(product.getId());
+				Integer previousPrice = productHistoryService.getDifferentLatestPriceByProductId(product);
 				return BasicProductInfo.createHistoryOf(product, previousPrice);
 			})
 			.toList();
