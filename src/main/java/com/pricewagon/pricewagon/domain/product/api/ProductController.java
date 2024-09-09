@@ -6,9 +6,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pricewagon.pricewagon.domain.product.dto.request.ProductUrlRequest;
 import com.pricewagon.pricewagon.domain.product.dto.response.BasicProductInfo;
 import com.pricewagon.pricewagon.domain.product.dto.response.IndividualProductInfo;
 import com.pricewagon.pricewagon.domain.product.entity.ShopType;
@@ -16,6 +19,7 @@ import com.pricewagon.pricewagon.domain.product.service.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "1. [상품]", description = "상품 API")
@@ -53,4 +57,11 @@ public class ProductController {
 		return productService.getBasicProductsByCategory(shopType, pageable, categoryId);
 	}
 
+	@Operation(summary = "상품 등록", description = "크롤링 할 상품 URL 등록")
+	@PostMapping("/registration")
+	public void registerProductURL(
+		@Valid @RequestBody ProductUrlRequest request
+	) {
+		productService.registerProductURL(request);
+	}
 }
