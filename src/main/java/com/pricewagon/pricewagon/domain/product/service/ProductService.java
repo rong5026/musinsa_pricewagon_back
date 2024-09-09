@@ -28,6 +28,7 @@ public class ProductService {
 	private final ProductHistoryService productHistoryService;
 	private final CategoryService categoryService;
 
+	// 쇼핑몰에 따른 상품 리스트 조회
 	@Transactional(readOnly = true)
 	public List<BasicProductInfo> getProductsByShopType(ShopType shopType, Pageable pageable) {
 		List<Product> products = productRepository.findAllByShopType(shopType, pageable).getContent();
@@ -40,6 +41,7 @@ public class ProductService {
 			.toList();
 	}
 
+	// 개별 상품 정보 조회
 	@Transactional(readOnly = true)
 	public ResponseEntity<IndividualProductInfo> getIndividualProductInfo(ShopType shopType, Integer productNumber) {
 		Product product = productRepository.findByShopTypeAndProductNumber(shopType, productNumber)
@@ -57,6 +59,7 @@ public class ProductService {
 		return ResponseEntity.ok(individualProductInfo);
 	}
 
+	// 쇼핑몰, 카테고리, 페이지 수로 상품 리스트 조회
 	public List<BasicProductInfo> getBasicProductsByCategory(ShopType shopType, Pageable pageable, Long parentCategoryId) {
 
 		// 상위 카테고리
