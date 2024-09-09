@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductController {
 	private final ProductService productService;
 
-	@Operation(summary = "전체상품 조회", description = "쇼핑몰별 모든 상품")
+	@Operation(summary = "전체상품 페이지별 조회", description = "쇼핑몰별 모든 상품")
 	@GetMapping("/{shopType}")
 	public List<BasicProductInfo> getProductsByShopType(
 		@PathVariable ShopType shopType,
