@@ -82,4 +82,4 @@ jobs:
             # 경로의 권한을 수정하여 Docker가 접근할 수 있도록 설정
             sudo chown -R $USER:$USER /home/hong/app/pricewagon-blue-green/data/certbot
             sudo chmod -R 755 /home/hong/app/pricewagon-blue-green/data/certbot
-            ./blue-green-deploy.sh
+#            ./blue-green-deploy.sh
