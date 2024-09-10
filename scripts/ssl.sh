@@ -41,7 +41,6 @@ docker-compose run --rm --entrypoint "\
     -subj '/CN=localhost'" certbot
 echo
 
-
 echo "### Starting nginx ..." >> $DEPLOY_LOG
 docker-compose up --force-recreate -d nginx
 echo
