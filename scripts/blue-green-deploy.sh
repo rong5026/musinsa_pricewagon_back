@@ -59,9 +59,9 @@ if [ -z "$EXIST_BLUE" ]; then
 #      ./ssl.sh
 #    fi
 
-    # Nginx 재시작 또는 설정 리로드
-    echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
-    docker exec nginx-proxy nginx -s reload
+#    # Nginx 재시작 또는 설정 리로드
+#    echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
+#    docker exec nginx-proxy nginx -s reload
 
     echo "green 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
     docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.yml stop spring-green
@@ -94,9 +94,9 @@ else
 #      ./ssl.sh
 #    fi
 
-    # Nginx 재시작 또는 설정 리로드
-    echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
-    docker exec nginx-proxy nginx -s reload
+#    # Nginx 재시작 또는 설정 리로드
+#    echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
+#    docker exec nginx-proxy nginx -s reload
 
     echo "blue 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
     docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml stop spring-blue
