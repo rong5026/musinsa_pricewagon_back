@@ -28,6 +28,7 @@ services:
       context: .
       dockerfile: Dockerfile-Nginx
     image: nginx:latest
+    restart: unless-stopped
     container_name: nginx-proxy
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt

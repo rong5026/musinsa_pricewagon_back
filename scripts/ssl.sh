@@ -1,20 +1,16 @@
 #!/bin/bash
 
-DEPLOY_LOG="/home/hong/app/ssl.log"  # 로그 파일 경로를 변수로 설정
-
-# 도커 컴포즈 설치 여부 확인
 if ! [ -x "$(command -v docker-compose)" ]; then
-  echo 'Error: docker-compose is not installed.' >&2 >> $DEPLOY_LOG
+  echo 'Error: docker-compose is not installed.' >&2
   exit 1
 fi
 
-domains=rong5026.iptime.org
+domains=("hong-nuri.shop" "www.hong-nuri.shop")
 rsa_key_size=4096
 data_path="./data/certbot"
 email="rong5026@naver.com" # Adding a valid address is strongly recommended
-staging=1 # Set to 1 if you're testing your setup to avoid hitting request limits
+staging=0 # Set to 1 if you're testing your setup to avoid hitting request limits
 
-# 기존 뎅리터 확인
 if [ -d "$data_path" ]; then
   read -p "Existing data found for $domains. Continue and replace existing certificate? (y/N) " decision
   if [ "$decision" != "Y" ] && [ "$decision" != "y" ]; then
@@ -24,14 +20,14 @@ fi
 
 
 if [ ! -e "$data_path/conf/options-ssl-nginx.conf" ] || [ ! -e "$data_path/conf/ssl-dhparams.pem" ]; then
-  echo "### Downloading recommended TLS parameters ..." >> $DEPLOY_LOG
+  echo "### Downloading recommended TLS parameters ..."
   mkdir -p "$data_path/conf"
   curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf > "$data_path/conf/options-ssl-nginx.conf"
   curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem > "$data_path/conf/ssl-dhparams.pem"
   echo
 fi
 
-echo "### Creating dummy certificate for $domains ..." >> $DEPLOY_LOG
+echo "### Creating dummy certificate for $domains ..."
 path="/etc/letsencrypt/live/$domains"
 mkdir -p "$data_path/conf/live/$domains"
 docker-compose run --rm --entrypoint "\
@@ -41,12 +37,11 @@ docker-compose run --rm --entrypoint "\
     -subj '/CN=localhost'" certbot
 echo
 
-
-echo "### Starting nginx ..." >> $DEPLOY_LOG
+echo "### Starting nginx ..."
 docker-compose up --force-recreate -d nginx
 echo
 
-echo "### Deleting dummy certificate for $domains ..." >> $DEPLOY_LOG
+echo "### Deleting dummy certificate for $domains ..."
 docker-compose run --rm --entrypoint "\
   rm -Rf /etc/letsencrypt/live/$domains && \
   rm -Rf /etc/letsencrypt/archive/$domains && \
@@ -54,7 +49,7 @@ docker-compose run --rm --entrypoint "\
 echo
 
 
-echo "### Requesting Let's Encrypt certificate for $domains ..." >> $DEPLOY_LOG
+echo "### Requesting Let's Encrypt certificate for $domains ..."
 #Join $domains to -d args
 domain_args=""
 for domain in "${domains[@]}"; do
@@ -80,5 +75,5 @@ docker-compose run --rm --entrypoint "\
     --force-renewal" certbot
 echo
 
-echo "### Reloading nginx ...">> $DEPLOY_LOG
+echo "### Reloading nginx ..."
 docker-compose exec nginx nginx -s reload
