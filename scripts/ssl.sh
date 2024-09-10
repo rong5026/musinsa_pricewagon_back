@@ -8,7 +8,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=rong5026.iptime.org
+domains=("hong-nuri.shop" "www.hong-nuri.shop")
 rsa_key_size=4096
 data_path="./data/certbot"
 email="rong5026@naver.com" # Adding a valid address is strongly recommended
@@ -80,4 +80,5 @@ docker-compose run --rm --entrypoint "\
 echo
 
 echo "### Reloading nginx ...">> $DEPLOY_LOG
+sleep 5
 docker-compose exec nginx nginx -s reload
