@@ -1,10 +1,8 @@
 name: BackEnd - Blue/Green - CD
-
 on:
   push:
     branches:
       - ssl
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -78,8 +76,8 @@ jobs:
             REMOTE_DIR="/home/hong/app/pricewagon-blue-green"
             cd $REMOTE_DIR
             unzip -o pricewagon-blue-green-app.zip
+          # SSL 경로의 권한을 수정하여 Docker가 접근할 수 있도록 설정
+            chown -R $USER:$USER /home/hong/app/pricewagon-blue-green/data/certbot
+            chmod -R 755 /home/hong/app/pricewagon-blue-green/data/certbot
             ./blue-green-deploy.sh
 
-#            # 경로의 권한을 수정하여 Docker가 접근할 수 있도록 설정
-#            sudo chown -R $USER:$USER /home/hong/app/pricewagon-blue-green/data/certbot
-#            sudo chmod -R 755 /home/hong/app/pricewagon-blue-green/data/certbot

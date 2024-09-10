@@ -9,10 +9,6 @@ DOCKER_APP_NAME=pricewagon
 DEPLOY_LOG="/home/hong/app/blue-green-deploy.log"  # 로그 파일 경로를 변수로 설정
 NGINX_CONFIG="/etc/nginx/nginx.conf"
 
-# 권한을 수정하여 certbot 파일 및 디렉토리에 대한 접근을 설정
-chown -R $USER:$USER /home/hong/app/pricewagon-blue-green/data/certbot
-chmod -R 755 /home/hong/app/pricewagon-blue-green/data/certbot
-
 # 실행 중인 blue가 있는지 확인
 EXIST_BLUE=$(docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml ps | grep spring-blue-container | grep Up)
 
