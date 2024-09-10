@@ -16,7 +16,7 @@ staging=1 # Set to 1 if you're testing your setup to avoid hitting request limit
 
 # 기존 뎅리터 확인
 if [ -d "$data_path" ]; then
-  read -p "Existing data found for $domains. Continue and replace existing certificate? (y/N) " decision
+  read -p "기존 데이터가 있습니다. 인증서를 다시 발급받으시겠습니까? (y/N) " decision
   if [ "$decision" != "Y" ] && [ "$decision" != "y" ]; then
     exit
   fi
@@ -24,14 +24,14 @@ fi
 
 
 if [ ! -e "$data_path/conf/options-ssl-nginx.conf" ] || [ ! -e "$data_path/conf/ssl-dhparams.pem" ]; then
-  echo "### Downloading recommended TLS parameters ..." >> $DEPLOY_LOG
+  echo "### 권장 TLS 설정 다운로드 중 ..." >> $DEPLOY_LOG
   mkdir -p "$data_path/conf"
   curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf > "$data_path/conf/options-ssl-nginx.conf"
   curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem > "$data_path/conf/ssl-dhparams.pem"
   echo
 fi
 
-echo "### Creating dummy certificate for $domains ..." >> $DEPLOY_LOG
+echo "### 더미 인증서 생성 중 ..." >> $DEPLOY_LOG
 path="/etc/letsencrypt/live/$domains"
 mkdir -p "$data_path/conf/live/$domains"
 docker-compose run --rm --entrypoint "\
@@ -41,11 +41,11 @@ docker-compose run --rm --entrypoint "\
     -subj '/CN=localhost'" certbot
 echo
 
-echo "### Starting nginx ..." >> $DEPLOY_LOG
+echo "### Nginx 시작 중 ..." >> $DEPLOY_LOG
 docker-compose up --force-recreate -d nginx
 echo
 
-echo "### Deleting dummy certificate for $domains ..." >> $DEPLOY_LOG
+echo "### 더미 인증서 삭제 중 ..." >> $DEPLOY_LOG
 docker-compose run --rm --entrypoint "\
   rm -Rf /etc/letsencrypt/live/$domains && \
   rm -Rf /etc/letsencrypt/archive/$domains && \
@@ -53,7 +53,7 @@ docker-compose run --rm --entrypoint "\
 echo
 
 
-echo "### Requesting Let's Encrypt certificate for $domains ..." >> $DEPLOY_LOG
+echo "### Let's Encrypt 인증서 요청 중 ..." >> $DEPLOY_LOG
 #Join $domains to -d args
 domain_args=""
 for domain in "${domains[@]}"; do
@@ -79,6 +79,6 @@ docker-compose run --rm --entrypoint "\
     --force-renewal" certbot
 echo
 
-echo "### Reloading nginx ...">> $DEPLOY_LOG
-sleep 5
+echo "### Nginx 재시작 중 ...">> $DEPLOY_LOG
+
 docker-compose exec nginx nginx -s reload
