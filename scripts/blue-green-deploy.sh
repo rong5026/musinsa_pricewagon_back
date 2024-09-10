@@ -51,12 +51,6 @@ if [ -z "$EXIST_BLUE" ]; then
     echo "blue 배포 도중 실패 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
   else
 
-    # Nginx가 실행 중이지 않으면 시작
-    if [ -z "$EXIST_NGINX" ]; then
-      echo "Nginx 처음 실행 중..." >> $DEPLOY_LOG
-      docker-compose -p ${DOCKER_APP_NAME} -f docker-compose.yml up -d --build nginx
-      echo "Nginx Cerbot SSL 적용 중 ..." >> $DEPLOY_LOG
-    fi
 
     # Nginx 재시작 또는 설정 리로드
     echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
@@ -84,13 +78,6 @@ else
   if [ -z "$GREEN_HEALTH" ]; then
     echo "green 배포 도중 실패 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
   else
-
-    # Nginx가 실행 중이지 않으면 시작
-    if [ -z "$EXIST_NGINX" ]; then
-      echo "Nginx 처음 실행 중..." >> $DEPLOY_LOG
-      docker-compose -p ${DOCKER_APP_NAME} -f docker-compose.yml up -d --build nginx
-      echo "Nginx Cerbot SSL 적용 중 ..." >> $DEPLOY_LOG
-    fi
 
     # Nginx 재시작 또는 설정 리로드
     echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
