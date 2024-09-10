@@ -2,7 +2,7 @@ name: BackEnd - Blue/Green - CD
 on:
   push:
     branches:
-      - ssl
+      - main
 jobs:
   deploy:
     runs-on: ubuntu-latest
