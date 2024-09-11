@@ -19,10 +19,12 @@ EXIST_NGINX=$(docker ps --filter "name=nginx-proxy" --filter "status=running" -q
 # 현재 실행 중인 컨테이너가 Blue인지 Green인지 확인하여 Nginx 설정 변경
 if [ -z "$EXIST_BLUE" ]; then
     # Blue가 실행 중이 아닌 경우 Nginx 설정을 Blue로 변경
-    docker exec nginx-proxy sed -i 's/spring-green-container:8080/spring-blue-container:8080/g' $NGINX_CONFIG
+#    docker exec nginx-proxy sed -i 's/spring-green-container:8080/spring-blue-container:8080/g' $NGINX_CONFIG
+    docker cp /etc/nginx/nginx.blue.conf nginx-proxy:/etc/nginx/nginx.conf
 else
     # Green이 실행 중인 경우 Nginx 설정을 Green으로 변경
-    docker exec nginx-proxy sed -i 's/spring-blue-container:8080/spring-green-container:8080/g' $NGINX_CONFIG
+#    docker exec nginx-proxy sed -i 's/spring-blue-container:8080/spring-green-container:8080/g' $NGINX_CONFIG
+    docker cp /etc/nginx/nginx.green.conf nginx-proxy:/etc/nginx/nginx.conf
 fi
 docker exec nginx-proxy nginx -s reload
 
@@ -50,8 +52,10 @@ if [ -z "$EXIST_BLUE" ]; then
   else
 
     echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
-    docker exec nginx-proxy sed -i 's/spring-green-container:8080/spring-blue-container:8080/g' $NGINX_CONFIG
+#    docker exec nginx-proxy sed -i 's/spring-green-container:8080/spring-blue-container:8080/g' $NGINX_CONFIG
+    docker cp /etc/nginx/nginx.blue.conf nginx-proxy:/etc/nginx/nginx.conf
     docker exec nginx-proxy nginx -s reload
+
 
     echo "green 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
     docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.yml stop spring-green
@@ -78,8 +82,10 @@ else
 
     # Nginx 재시작 또는 설정 리로드
     echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
-    docker exec nginx-proxy sed -i 's/spring-blue-container:8080/spring-green-container:8080/g' $NGINX_CONFIG
+#    docker exec nginx-proxy sed -i 's/spring-blue-container:8080/spring-green-container:8080/g' $NGINX_CONFIG
+    docker cp /etc/nginx/nginx.green.conf nginx-proxy:/etc/nginx/nginx.conf
     docker exec nginx-proxy nginx -s reload
+
 
     echo "blue 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
     docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml stop spring-blue
