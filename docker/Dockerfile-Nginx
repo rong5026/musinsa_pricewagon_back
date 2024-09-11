@@ -3,6 +3,11 @@ FROM nginx:latest
 
 # Nginx 설정 파일을 복사
 #COPY ./nginx.conf /etc/nginx/nginx.conf
+# Nginx 설정 파일을 저장할 디렉토리 생성
+RUN mkdir -p /etc/nginx
+
+# Nginx 설정 파일을 복사
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
 # Nginx 컨테이너를 실행
 CMD ["nginx", "-g", "daemon off;"]
