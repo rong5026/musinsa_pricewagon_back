@@ -12,18 +12,18 @@ DEPLOY_LOG="/home/hong/app/blue-green-deploy.log"  # 로그 파일 경로를 변
 EXIST_BLUE=$(docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml ps | grep spring-blue-container | grep Up)
 
 # Nginx 컨테이너가 이미 실행 중인지 확인
-EXIST_NGINX=$(docker ps --filter "name=nginx-proxy" --filter "status=running" -q)
-if [ -z "$EXIST_NGINX" ]; then
-   docker-compose -p ${DOCKER_APP_NAME}-nginx -f docker-compose.yml up -d nginx
-fi
+#EXIST_NGINX=$(docker ps --filter "name=nginx-proxy" --filter "status=running" -q)
+#if [ -z "$EXIST_NGINX" ]; then
+#   docker-compose -p ${DOCKER_APP_NAME}-nginx -f docker-compose.yml up -d nginx
+#fi
 
 # 현재 실행 중인 컨테이너가 Blue인지 Green인지 확인하여 Nginx 설정 변경
 if [ -z "$EXIST_BLUE" ]; then
     # Blue가 실행 중이 아닌 경우 Nginx 설정을 Blue로 변경
-    docker cp ./nginx.blue.conf nginx-proxy:/etc/nginx/nginx.conf
+    docker cp ./nginx.blue.conf ./nginx.conf
 else
     # Green이 실행 중인 경우 Nginx 설정을 Green으로 변경
-    docker cp ./nginx.green.conf nginx-proxy:/etc/nginx/nginx.conf
+    docker cp ./nginx.green.conf ./nginx.conf
 fi
 docker exec nginx-proxy nginx -s reload
 
@@ -51,7 +51,7 @@ if [ -z "$EXIST_BLUE" ]; then
   else
 
     echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
-    docker cp ./nginx.blue.conf nginx-proxy:/etc/nginx/nginx.conf
+    docker cp ./nginx.blue.conf ./nginx.conf
     docker exec nginx-proxy nginx -s reload
 
 
@@ -80,7 +80,7 @@ else
 
     # Nginx 재시작 또는 설정 리로드
     echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
-    docker cp ./nginx.green.conf nginx-proxy:/etc/nginx/nginx.conf
+    docker cp ./nginx.green.conf ./nginx.conf
     docker exec nginx-proxy nginx -s reload
 
 
