@@ -48,7 +48,6 @@ jobs:
           cp ./docker/Dockerfile-Nginx ./deploy/
           cp ./scripts/*.sh ./deploy/
           cp ./build/libs/*.jar ./deploy/
-          cp ./config/nginx.conf ./deploy/
           cp ./config/nginx.blue.conf ./deploy/
           cp ./config/nginx.green.conf ./deploy/
           chmod +x ./deploy/blue-green-deploy.sh
