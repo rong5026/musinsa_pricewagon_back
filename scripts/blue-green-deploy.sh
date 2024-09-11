@@ -24,6 +24,7 @@ else
     # Green이 실행 중인 경우 Nginx 설정을 Green으로 변경
     docker exec nginx-proxy sed -i 's/spring-blue-container:8080/spring-green-container:8080/g' $NGINX_CONFIG
 fi
+docker exec nginx-proxy nginx -s reload
 
 # 배포 시작한 날짜와 시간을 기록
 echo "배포 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
@@ -48,9 +49,8 @@ if [ -z "$EXIST_BLUE" ]; then
     echo "blue 배포 도중 실패 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
   else
 
-
-    # Nginx 재시작 또는 설정 리로드
     echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
+    docker exec nginx-proxy sed -i 's/spring-green-container:8080/spring-blue-container:8080/g' $NGINX_CONFIG
     docker exec nginx-proxy nginx -s reload
 
     echo "green 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
@@ -78,6 +78,7 @@ else
 
     # Nginx 재시작 또는 설정 리로드
     echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
+    docker exec nginx-proxy sed -i 's/spring-blue-container:8080/spring-green-container:8080/g' $NGINX_CONFIG
     docker exec nginx-proxy nginx -s reload
 
     echo "blue 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
