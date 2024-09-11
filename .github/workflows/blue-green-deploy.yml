@@ -79,4 +79,3 @@ jobs:
             chown -R $USER:$USER /home/hong/app/pricewagon-blue-green/data/certbot
             chmod -R 755 /home/hong/app/pricewagon-blue-green/data/certbot
             ./blue-green-deploy.sh
-
