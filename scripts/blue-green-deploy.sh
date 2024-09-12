@@ -36,12 +36,12 @@ if [ -z "$EXIST_BLUE" ]; then
     echo "blue 배포 도중 실패 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
   else
     # Blue 컨테이너가 실행 중이므로 Blue용 Nginx 설정 파일을 복사
-    echo "Nginx 리로드 시작일자 : $(date +%Y-%m-%d %H:%M:%S)" >> $DEPLOY_LOG
-    if ! docker cp $NGINX_BLUE_CONFIG nginx-proxy:$NGINX_CONFIG; then
-        echo "Nginx 설정 복사 실패: $(date +%Y-%m-%d %H:%M:%S)" >> $DEPLOY_LOG
+    echo "Nginx 리로드 시작일자 :  $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
+    if ! ERROR_LOG=$(docker cp $NGINX_BLUE_CONFIG nginx-proxy:$NGINX_CONFIG 2>&1); then
+        echo "Nginx 설정 복사 실패: $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
     fi
-    if ! docker exec nginx-proxy nginx -s reload; then
-        echo "Nginx 리로드 실패: $(date +%Y-%m-%d %H:%M:%S)" >> $DEPLOY_LOG
+    if ! ERROR_LOG=$(docker exec nginx-proxy nginx -s reload 2>&1); then
+        echo "Nginx 리로드 실패:  $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
     fi
 
     echo "green 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
@@ -67,12 +67,12 @@ else
     echo "green 배포 도중 실패 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
   else
     # Blue 컨테이너가 실행 중이므로 Blue용 Nginx 설정 파일을 복사
-    echo "Nginx 리로드 시작일자 : $(date +%Y-%m-%d %H:%M:%S)" >> $DEPLOY_LOG
-    if ! docker cp $NGINX_GREEN_CONFIG nginx-proxy:$NGINX_CONFIG; then
-        echo "Nginx 설정 복사 실패: $(date +%Y-%m-%d %H:%M:%S)" >> $DEPLOY_LOG
+    echo "Nginx 리로드 시작일자 :  $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
+    if ! ERROR_LOG=$(docker cp $NGINX_GREEN_CONFIG nginx-proxy:$NGINX_CONFIG 2>&1); then
+        echo "Nginx 설정 복사 실패:  $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
     fi
-    if ! docker exec nginx-proxy nginx -s reload; then
-        echo "Nginx 리로드 실패: $(date +%Y-%m-%d %H:%M:%S)" >> $DEPLOY_LOG
+    if ! ERROR_LOG=$(docker exec nginx-proxy nginx -s reload 2>&1); then
+        echo "Nginx 리로드 실패:  $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
     fi
 
     echo "blue 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
