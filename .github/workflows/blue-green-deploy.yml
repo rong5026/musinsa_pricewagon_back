@@ -51,6 +51,7 @@ jobs:
           cp ./config/nginx.conf ./deploy/
           cp ./config/nginx.blue.conf ./deploy/
           cp ./config/nginx.green.conf ./deploy/
+          cp ./config/nginx.template.conf ./deploy/
           chmod +x ./deploy/blue-green-deploy.sh
           chmod +x ./deploy/ssl.sh
           zip -r -qq -j ./pricewagon-blue-green-app.zip ./deploy
