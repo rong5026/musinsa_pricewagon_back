@@ -7,24 +7,13 @@ cd /home/hong/app/pricewagon-blue-green
 
 DOCKER_APP_NAME=pricewagon
 DEPLOY_LOG="/home/hong/app/blue-green-deploy.log"  # 로그 파일 경로를 변수로 설정
-NGINX_CONFIG="/etc/nginx/nginx.conf"
+NGINX_BLUE_CONFIG="/home/hong/app/pricewagon-blue-green/nginx.blue.conf"  # Blue용 Nginx 설정 파일
+NGINX_GREEN_CONFIG="/home/hong/app/pricewagon-blue-green/nginx.green.conf"  # Green용 Nginx 설정 파일
+NGINX_CONFIG="/etc/nginx/nginx.conf"  # 컨테이너 내부의 Nginx 설정 파일 경로
 
 # 실행 중인 blue가 있는지 확인
 EXIST_BLUE=$(docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml ps | grep spring-blue-container | grep Up)
 
-## 현재 실행 중인 컨테이너가 Blue인지 Green인지 확인하여 Nginx 설정 변경
-#if [ -z "$EXIST_BLUE" ]; then
-#    CONTAINER_NAME="spring-blue-container"
-#    # Blue가 실행 중이 아닌 경우 Nginx 설정을 Blue로 변경
-#    # docker exec nginx-proxy sed -i 's/spring-green-container:8080/spring-blue-container:8080/g' $NGINX_CONFIG
-#else
-#    # Green이 실행 중인 경우 Nginx 설정을 Green으로 변경
-##    docker exec nginx-proxy sed -i 's/spring-blue-container:8080/spring-green-container:8080/g' $NGINX_CONFIG
-#fi
-## 템플릿을 기반으로 실제 Nginx 설정 파일 생성
-#docker exec nginx-proxy nginx -s reload
-
-# 배포 시작한 날짜와 시간을 기록
 echo "배포 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
 
 # green이 실행중이면 blue up
@@ -46,12 +35,14 @@ if [ -z "$EXIST_BLUE" ]; then
   if [ -z "$BLUE_HEALTH" ]; then
     echo "blue 배포 도중 실패 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
   else
-
-    CONTAINER_NAME="spring-blue-container"
-    sed "s/{{CONTAINER_NAME}}/$CONTAINER_NAME/g" /home/hong/app/pricewagon-blue-green/nginx.template.conf > /etc/nginx/nginx.conf
-
-    echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
-    docker exec nginx-proxy nginx -s reload
+    # Blue 컨테이너가 실행 중이므로 Blue용 Nginx 설정 파일을 복사
+    echo "Nginx 리로드 시작일자 : $(date +%Y-%m-%d %H:%M:%S)" >> $DEPLOY_LOG
+    if ! docker cp $NGINX_BLUE_CONFIG nginx-proxy:$NGINX_CONFIG; then
+        echo "Nginx 설정 복사 실패: $(date +%Y-%m-%d %H:%M:%S)" >> $DEPLOY_LOG
+    fi
+    if ! docker exec nginx-proxy nginx -s reload; then
+        echo "Nginx 리로드 실패: $(date +%Y-%m-%d %H:%M:%S)" >> $DEPLOY_LOG
+    fi
 
     echo "green 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
     docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.yml stop spring-green
@@ -75,13 +66,14 @@ else
   if [ -z "$GREEN_HEALTH" ]; then
     echo "green 배포 도중 실패 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
   else
-
-    CONTAINER_NAME="spring-green-container"
-    sed "s/{{CONTAINER_NAME}}/$CONTAINER_NAME/g" /home/hong/app/pricewagon-blue-green/nginx.template.conf > /etc/nginx/nginx.conf
-
-    # Nginx 재시작 또는 설정 리로드
-    echo "Nginx 리로드 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
-    docker exec nginx-proxy nginx -s reload
+    # Blue 컨테이너가 실행 중이므로 Blue용 Nginx 설정 파일을 복사
+    echo "Nginx 리로드 시작일자 : $(date +%Y-%m-%d %H:%M:%S)" >> $DEPLOY_LOG
+    if ! docker cp $NGINX_GREEN_CONFIG nginx-proxy:$NGINX_CONFIG; then
+        echo "Nginx 설정 복사 실패: $(date +%Y-%m-%d %H:%M:%S)" >> $DEPLOY_LOG
+    fi
+    if ! docker exec nginx-proxy nginx -s reload; then
+        echo "Nginx 리로드 실패: $(date +%Y-%m-%d %H:%M:%S)" >> $DEPLOY_LOG
+    fi
 
     echo "blue 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
     docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.yml stop spring-blue
