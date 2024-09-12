@@ -82,7 +82,6 @@ else
   fi
 
 fi
-
 echo "배포 종료  : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> $DEPLOY_LOG
 echo "===================== 배포 완료 =====================" >>  $DEPLOY_LOG
 echo >>  $DEPLOY_LOG
