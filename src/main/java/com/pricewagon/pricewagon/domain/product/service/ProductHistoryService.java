@@ -19,7 +19,7 @@ public class ProductHistoryService {
 	// 현개 가격과 다른 첫 번째 값을 찾고, 없으면 최근 값을 리턴
 	public Integer getDifferentLatestPriceByProductId(Product product) {
 
-		ProductHistory previousHistory = productHistoryRepository.findFirstByProductIdAndPriceNotOrderByCreatedAtDesc(product.getId(), product.getCurrentPrice())
+		ProductHistory previousHistory = productHistoryRepository.findFirstByProductIdAndPriceNot(product.getId(), product.getCurrentPrice())
 			.orElse(null);
 
 		if (previousHistory == null)
