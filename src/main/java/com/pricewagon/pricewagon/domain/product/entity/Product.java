@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.annotations.Comment;
 
+import com.pricewagon.pricewagon.domain.alarm.entity.Alarm;
 import com.pricewagon.pricewagon.domain.category.entity.Category;
 import com.pricewagon.pricewagon.domain.common.BaseAuditEntity;
 
@@ -82,4 +83,7 @@ public class Product extends BaseAuditEntity {
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProductHistory> productHistories = new ArrayList<>();
+
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Alarm> alarms = new ArrayList<>();
 }
