@@ -1,5 +1,6 @@
 package com.pricewagon.pricewagon.domain.product.entity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class Product extends BaseAuditEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
 
 	@Comment("상품 이미지 URL")
 	@Column(length = 200)
@@ -48,7 +49,7 @@ public class Product extends BaseAuditEntity {
 	private Integer productNumber;
 
 	@Comment("브랜드 이름")
-	@Column(length = 100, nullable = false)
+	@Column(length = 100)
 	private String brand;
 
 	@Comment("판매가")
@@ -56,8 +57,8 @@ public class Product extends BaseAuditEntity {
 	private Integer currentPrice;
 
 	@Comment("별점")
-	@Column(nullable = false)
-	private Double starScore;
+	@Column(nullable = false, precision = 2, scale = 1)
+	private BigDecimal starScore;
 
 	@Comment("리뷰 수")
 	@Column(nullable = false)
@@ -69,7 +70,7 @@ public class Product extends BaseAuditEntity {
 
 	@Comment("쇼핑몰 타입")
 	@Enumerated(EnumType.STRING)
-	@Column(length = 50)
+	@Column(length = 50, nullable = false)
 	private ShopType shopType;
 
 	@Comment("카테고리")

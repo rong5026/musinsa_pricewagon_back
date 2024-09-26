@@ -51,7 +51,7 @@ public class ProductController {
 	@GetMapping("/{shopType}/category/{categoryId}")
 	public List<BasicProductInfo> getBasicProductsByCategory(
 		@PathVariable ShopType shopType,
-		@PathVariable Long categoryId,
+		@PathVariable Integer categoryId,
 		Pageable pageable
 	) {
 		return productService.getBasicProductsByCategory(shopType, pageable, categoryId);

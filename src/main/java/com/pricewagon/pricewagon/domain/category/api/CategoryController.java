@@ -22,7 +22,7 @@ public class CategoryController {
 	@Operation(summary = "하위 카테고리 조회", description = "부모와 하위 카테고리 포함 조회")
 	@GetMapping("/{categoryId}")
 	public AllCategoryResponse getParentAndSubCategories(
-		@PathVariable Long categoryId
+		@PathVariable Integer categoryId
 	) {
 		return categoryService.getParentAndSubCategoriesByParentId(categoryId);
 	}

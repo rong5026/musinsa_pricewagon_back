@@ -18,13 +18,13 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class CategoryService {
 	private final CategoryRepository categoryRepository;
-	public Category getCategoryById(Long categoryId) {
+	public Category getCategoryById(Integer categoryId) {
 		return categoryRepository.findById(categoryId)
 			.orElseThrow(() -> new RuntimeException("해당 ID의 카테고리가 없습니다"));
 	}
 
 	// 부모id로 부모와 하위 카테고리 모두 리턴
-	public AllCategoryResponse getParentAndSubCategoriesByParentId(Long parentCategoryId){
+	public AllCategoryResponse getParentAndSubCategoriesByParentId(Integer parentCategoryId){
 		Category parentCategory = getCategoryById(parentCategoryId);
 
 		List<Category> categories = getSubCategoriesByParentId(parentCategoryId);
@@ -36,12 +36,12 @@ public class CategoryService {
 	}
 
 	//부모 ID로 하위 카테고리 찾기
-	public List<Category> getSubCategoriesByParentId(Long parentCategoryId) {
+	public List<Category> getSubCategoriesByParentId(Integer parentCategoryId) {
 		return categoryRepository.findAllByParentCategory_Id(parentCategoryId);
 	}
 
 	// 자식 ID로 부모, 자식 카테고리 리턴
-	public ParentAndChildCategoryDTO getParentAndChildCategoriesByChildId(Long childCategoryId) {
+	public ParentAndChildCategoryDTO getParentAndChildCategoriesByChildId(Integer childCategoryId) {
 		Category childCategory = getCategoryById(childCategoryId);
 		Category parentCategory = childCategory.getParentCategory();
 
