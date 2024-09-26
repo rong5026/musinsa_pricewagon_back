@@ -11,8 +11,8 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 
 @EntityListeners(AuditingEntityListener.class)
-@MappedSuperclass
 @Getter
+@MappedSuperclass
 public class BaseAuditEntity extends BaseEntity {
 	@LastModifiedDate
 	@Column(name = "updated_at", nullable = false)

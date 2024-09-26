@@ -3,7 +3,7 @@ package com.pricewagon.pricewagon.domain.category.dto;
 import com.pricewagon.pricewagon.domain.category.entity.Category;
 
 public record CategoryDTO(
-	Long id,
+	Integer id,
 	String cateroyName
 ) {
 	public static CategoryDTO toDTO(Category category) {

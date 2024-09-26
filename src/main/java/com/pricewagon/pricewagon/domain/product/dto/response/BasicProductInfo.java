@@ -1,5 +1,7 @@
 package com.pricewagon.pricewagon.domain.product.dto.response;
 
+import java.math.BigDecimal;
+
 import com.pricewagon.pricewagon.domain.product.entity.Product;
 import com.pricewagon.pricewagon.domain.product.entity.ShopType;
 
@@ -7,7 +9,7 @@ public record BasicProductInfo(
 	 Integer productNumber,
 	 String name,
 	 String brand,
-	 Double starScore,
+	 BigDecimal starScore,
 	 Integer reviewCount,
 	 Integer likeCount,
 	 String imgUrl,
