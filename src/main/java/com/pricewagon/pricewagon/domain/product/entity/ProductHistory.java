@@ -24,7 +24,7 @@ public class ProductHistory extends BaseEntity {
 	@Id
 	@JsonIgnore
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
 
 	@Comment("가격")
 	@Column(nullable = false)

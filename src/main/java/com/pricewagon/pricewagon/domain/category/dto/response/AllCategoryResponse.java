@@ -6,7 +6,7 @@ import com.pricewagon.pricewagon.domain.category.dto.CategoryDTO;
 import com.pricewagon.pricewagon.domain.category.entity.Category;
 
 public record AllCategoryResponse(
-	Long id,
+	Integer id,
 	String parentCateroyName,
 	List<CategoryDTO> categoryList
 ) {

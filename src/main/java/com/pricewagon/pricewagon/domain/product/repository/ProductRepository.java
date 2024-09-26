@@ -10,8 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.pricewagon.pricewagon.domain.product.entity.Product;
 import com.pricewagon.pricewagon.domain.product.entity.ShopType;
 
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Integer> {
 	Page<Product> findAllByShopType(ShopType shopType, Pageable pageable);
 	Optional<Product> findByShopTypeAndProductNumber(ShopType shopType, Integer productNumber);
-	Page<Product> findByShopTypeAndCategory_IdIn(ShopType shopType, List<Long> categoryIds, Pageable pageable);
+	Page<Product> findByShopTypeAndCategory_IdIn(ShopType shopType, List<Integer> categoryIds, Pageable pageable);
 }
