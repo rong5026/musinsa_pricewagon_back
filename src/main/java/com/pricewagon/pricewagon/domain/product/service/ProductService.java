@@ -61,7 +61,7 @@ public class ProductService {
 	}
 
 	// 쇼핑몰, 카테고리, 페이지 수로 상품 리스트 조회
-	public List<BasicProductInfo> getBasicProductsByCategory(ShopType shopType, Pageable pageable, Long parentCategoryId) {
+	public List<BasicProductInfo> getBasicProductsByCategory(ShopType shopType, Pageable pageable, Integer parentCategoryId) {
 
 		// 상위 카테고리
 		Category parentCategory = categoryService.getCategoryById(parentCategoryId);
@@ -70,7 +70,7 @@ public class ProductService {
 		subCategories.add(parentCategory);
 
 		// 카테고리 전체 목록 생성
-		List<Long> categoriesId = new ArrayList<>();
+		List<Integer> categoriesId = new ArrayList<>();
 		for (Category category : subCategories) {
 			categoriesId.add(category.getId());
 		}

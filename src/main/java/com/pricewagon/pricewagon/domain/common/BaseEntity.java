@@ -1,6 +1,6 @@
 package com.pricewagon.pricewagon.domain.common;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,5 +16,5 @@ import lombok.Getter;
 public class BaseEntity {
 	@CreatedDate
 	@Column(name = "created_at", updatable = false, nullable = false)
-	private LocalDateTime createdAt;
+	private LocalDate createdAt;
 }
