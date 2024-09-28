@@ -1,4 +1,4 @@
-package com.pricewagon.pricewagon.domain.product.repository;
+package com.pricewagon.pricewagon.domain.product.repository.producthistory;
 
 import java.util.Optional;
 
