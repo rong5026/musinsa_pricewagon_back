@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pricewagon.pricewagon.domain.product.dto.request.ProductUrlRequest;
 import com.pricewagon.pricewagon.domain.product.dto.response.BasicProductInfo;
 import com.pricewagon.pricewagon.domain.product.dto.response.IndividualProductInfo;
+import com.pricewagon.pricewagon.domain.product.entity.Product;
 import com.pricewagon.pricewagon.domain.product.entity.ShopType;
 import com.pricewagon.pricewagon.domain.product.service.ProductService;
 
@@ -31,12 +33,14 @@ public class ProductController {
 
 	@Operation(summary = "전체상품 페이지별 조회", description = "쇼핑몰별 모든 상품")
 	@GetMapping("/{shopType}")
-	public List<BasicProductInfo> getProductsByShopType(
+	public List<Product> getProductsByShopType(
 		@PathVariable ShopType shopType,
-		Pageable pageable
+		@RequestParam(required = false) Integer lastId,
+		@RequestParam(defaultValue = "10") int size
 	) {
-		return productService.getProductsByShopType(shopType, pageable);
+		return productService.getProductsByShopType(shopType, lastId, size);
 	}
+
 
 	@Operation(summary = "개별 상품 정보 조최", description = "특정 상품에 대한 정보")
 	@GetMapping("/{shopType}/{productNumber}")
