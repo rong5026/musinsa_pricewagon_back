@@ -41,7 +41,7 @@ public class ProductDataLoader implements CommandLineRunner {
 		Random random = new Random();
 		Category category = categoryRepository.findById(1).orElse(null);
 
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 10000; i < 150000; i++) {
 
 			ProductDetail productDetail = ProductDetail.builder()
 				.highPrice(1000)

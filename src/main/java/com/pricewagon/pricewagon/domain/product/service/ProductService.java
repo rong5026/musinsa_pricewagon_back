@@ -16,7 +16,7 @@ import com.pricewagon.pricewagon.domain.product.dto.response.BasicProductInfo;
 import com.pricewagon.pricewagon.domain.product.dto.response.IndividualProductInfo;
 import com.pricewagon.pricewagon.domain.product.entity.Product;
 import com.pricewagon.pricewagon.domain.product.entity.ShopType;
-import com.pricewagon.pricewagon.domain.product.repository.ProductRepository;
+import com.pricewagon.pricewagon.domain.product.repository.product.ProductRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,8 +31,31 @@ public class ProductService {
 
 	// 쇼핑몰에 따른 상품 리스트 조회
 	@Transactional(readOnly = true)
-	public List<BasicProductInfo> getProductsByShopType(ShopType shopType, Pageable pageable) {
+	public List<Product> getProductsByShopType(ShopType shopType, Pageable pageable) {
 		List<Product> products = productRepository.findAllByShopType(shopType, pageable).getContent();
+
+		return products;
+	}
+
+	@Transactional(readOnly = true)
+	public List<Product> getProductsByShopType(ShopType shopType, Integer lastId, int size) {
+		List<Product> products = productRepository.findProductsByShopTypeAndLastId(shopType, lastId, size);
+		return products;
+	}
+
+
+	/**
+	 * No-Offset 방식으로 제품 목록을 조회
+	 *
+	 * @param shopType 조회할 쇼핑몰 타입
+	 * @param lastId   마지막으로 조회된 제품의 ID (첫 페이지일 경우 null)
+	 * @param size     조회할 데이터 개수
+	 * @return List of BasicProductInfo
+	 */
+	@Transactional(readOnly = true)
+	public List<BasicProductInfo> getProductsByShopType1(ShopType shopType, Integer lastId, int size) {
+		// QueryDSL을 사용하여 동적으로 조건에 따라 제품 목록을 조회
+		List<Product> products = productRepository.findProductsByShopTypeAndLastId(shopType, lastId, size);
 
 		return products.stream()
 			.map(product -> {
@@ -41,6 +64,7 @@ public class ProductService {
 			})
 			.toList();
 	}
+
 
 	// 개별 상품 정보 조회
 	@Transactional(readOnly = true)

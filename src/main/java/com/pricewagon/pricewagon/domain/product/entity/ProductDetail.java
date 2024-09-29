@@ -42,5 +42,6 @@ public class ProductDetail {
 		this.highPrice = highPrice;
 		this.middlePrice = middlePrice;
 		this.lowPrice = lowPrice;
+		this.productUrl = productUrl;
 	}
 }
