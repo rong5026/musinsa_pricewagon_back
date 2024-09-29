@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,4 +36,11 @@ public class ProductDetail {
 	@Comment("상품 URL")
 	@Column(length = 200, nullable = false, unique = true)
 	private String productUrl;
+
+	@Builder
+	public ProductDetail(Integer highPrice, Integer middlePrice, Integer lowPrice, String productUrl) {
+		this.highPrice = highPrice;
+		this.middlePrice = middlePrice;
+		this.lowPrice = lowPrice;
+	}
 }
