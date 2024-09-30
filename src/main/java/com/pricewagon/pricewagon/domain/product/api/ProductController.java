@@ -3,6 +3,7 @@ package com.pricewagon.pricewagon.domain.product.api;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,12 +34,21 @@ public class ProductController {
 
 	@Operation(summary = "전체상품 페이지별 조회", description = "쇼핑몰별 모든 상품")
 	@GetMapping("/{shopType}")
-	public List<Product> getProductsByShopType(
+	public List<Product> getProductsByShopType1(
 		@PathVariable ShopType shopType,
 		@RequestParam(required = false) Integer lastId,
 		@RequestParam(defaultValue = "10") int size
 	) {
 		return productService.getProductsByShopType(shopType, lastId, size);
+	}
+
+	@Operation(summary = "전체상품 페이지별 조회", description = "쇼핑몰별 모든 상품")
+	@GetMapping("/{shopType}/1")
+	public List<Product> getProductsByShopType2(
+		@PathVariable ShopType shopType,
+		@PageableDefault(size = 10) Pageable pageable
+	) {
+		return productService.getProductsByShopType1(shopType, pageable);
 	}
 
 

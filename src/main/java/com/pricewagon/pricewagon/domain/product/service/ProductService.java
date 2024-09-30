@@ -31,7 +31,7 @@ public class ProductService {
 
 	// 쇼핑몰에 따른 상품 리스트 조회
 	@Transactional(readOnly = true)
-	public List<Product> getProductsByShopType(ShopType shopType, Pageable pageable) {
+	public List<Product> getProductsByShopType1(ShopType shopType, Pageable pageable) {
 		List<Product> products = productRepository.findAllByShopType(shopType, pageable).getContent();
 
 		return products;
