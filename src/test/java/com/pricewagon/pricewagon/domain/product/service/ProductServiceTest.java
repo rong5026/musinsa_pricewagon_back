@@ -32,28 +32,36 @@ class ProductServiceTest {
 		ShopType shopType = ShopType.MUSINSA;
 		int pageSize = 10;
 
-		// Offset 방식 성능 테스트
-		long offsetStartTime = System.currentTimeMillis();
-		Pageable pageable = PageRequest.of(0, pageSize); // 첫 페이지부터 시작
-		List<Product> offsetProducts = productRepository.findAllByShopType(shopType, pageable).getContent();
-		long offsetEndTime = System.currentTimeMillis();
+		// Offset 방식 첫 페이지 성능 테스트
+		long offsetFirstPageStartTime = System.currentTimeMillis();
+		Pageable firstPageable = PageRequest.of(0, pageSize);
+		List<Product> offsetFirstPageProducts = productRepository.findAllByShopType(shopType, firstPageable).getContent();
+		long offsetFirstPageEndTime = System.currentTimeMillis();
+
+		// Offset 방식 마지막 페이지 성능 테스트
+		long offsetLastPageStartTime = System.currentTimeMillis();
+		Pageable lastPageable = PageRequest.of(14990, pageSize);
+		List<Product> offsetLaststPageProducts = productRepository.findAllByShopType(shopType, lastPageable).getContent();
+		long offsetLastPageEndTime = System.currentTimeMillis();
 
 		// No-Offset 방식 성능 테스트 (처음에는 lastId가 null로 시작)
 		long noOffsetStartTime = System.currentTimeMillis();
-		List<Product> noOffsetProducts =  productRepository.findProductsByShopTypeAndLastId(shopType, 0, pageSize);
+		List<Product> noOffsetProducts =  productRepository.findProductsByShopTypeAndLastId(shopType, 149990, pageSize);
 		long noOffsetEndTime = System.currentTimeMillis();
 
 
-		System.out.println("Offset 방식 조회 시간 (ms): " + (offsetEndTime - offsetStartTime));
+		System.out.println("Offset 첫페이지 방식 조회 시간 (ms): " + (offsetFirstPageEndTime - offsetFirstPageStartTime));
+		System.out.println("Offset 마지막 페이지 방식 조회 시간 (ms): " + (offsetLastPageEndTime - offsetLastPageStartTime));
 		System.out.println("No-Offset 방식 조회 시간 (ms): " + (noOffsetEndTime - noOffsetStartTime));
 
-		System.out.println("Offset 방식 조회된 상품 수: " + offsetProducts.size());
-		System.out.println("No-Offset 방식 조회된 상품 수: " + noOffsetProducts.size());
+		System.out.println("Offset 방식 첫페이지 조회된 상품 수: " + offsetFirstPageProducts.size());
+		System.out.println("Offset 방식 마지막 페이지 조회된 상품 수: " + offsetLaststPageProducts.size());
+		System.out.println("No-Offset 방식 마지막 페이지 조회된 상품 수: " + noOffsetProducts.size());
 
-		assertEquals(offsetProducts.size(), noOffsetProducts.size(), "두 방식의 조회된 상품 수가 다릅니다.");
+		assertEquals(offsetFirstPageProducts.size(), noOffsetProducts.size(), "두 방식의 조회된 상품 수가 다릅니다.");
 
-		for (int i = 0; i < offsetProducts.size(); i++) {
-			Product offsetProduct = offsetProducts.get(i);
+		for (int i = 0; i < offsetLaststPageProducts.size(); i++) {
+			Product offsetProduct = offsetLaststPageProducts.get(i);
 			Product noOffsetProduct = noOffsetProducts.get(i);
 
 			ProductDto offsetProductDto = ProductDto.toDTO(offsetProduct);
