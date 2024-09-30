@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pricewagon.pricewagon.domain.product.dto.request.ProductUrlRequest;
 import com.pricewagon.pricewagon.domain.product.dto.response.BasicProductInfo;
 import com.pricewagon.pricewagon.domain.product.dto.response.IndividualProductInfo;
-import com.pricewagon.pricewagon.domain.product.entity.Product;
 import com.pricewagon.pricewagon.domain.product.entity.ShopType;
 import com.pricewagon.pricewagon.domain.product.service.ProductService;
 
@@ -34,7 +33,7 @@ public class ProductController {
 
 	@Operation(summary = "전체상품 페이지별 조회", description = "쇼핑몰별 모든 상품")
 	@GetMapping("/{shopType}")
-	public List<Product> getProductsByShopType1(
+	public List<BasicProductInfo> getProductsByShopType1(
 		@PathVariable ShopType shopType,
 		@RequestParam(required = false) Integer lastId,
 		@RequestParam(defaultValue = "10") int size
@@ -44,7 +43,7 @@ public class ProductController {
 
 	@Operation(summary = "전체상품 페이지별 조회", description = "쇼핑몰별 모든 상품")
 	@GetMapping("/{shopType}/1")
-	public List<Product> getProductsByShopType2(
+	public List<BasicProductInfo> getProductsByShopType2(
 		@PathVariable ShopType shopType,
 		@PageableDefault(size = 10) Pageable pageable
 	) {
