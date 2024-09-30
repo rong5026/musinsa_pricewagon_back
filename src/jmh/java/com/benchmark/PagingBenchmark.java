@@ -30,18 +30,26 @@ public class PagingBenchmark {
 		productRepository = context.getBean(ProductRepository.class);
 	}
 
-	// Offset 방식 성능 테스트
+	// Offset 방식 첫페이지 조회 성능 테스트
 	@Benchmark
-	public void testOffsetPaging(Blackhole blackhole) {
+	public void testOffsetFirstPaging(Blackhole blackhole) {
 		Pageable pageable = PageRequest.of(0, pageSize);
 		List<Product> offsetProducts = productRepository.findAllByShopType(shopType, pageable).getContent();
 		blackhole.consume(offsetProducts);
 	}
 
-	// No-Offset 방식 성능 테스트
+	// Offset 방식 마지막 페이지 조회 성능 테스트
+	@Benchmark
+	public void testOffsetLastPaging(Blackhole blackhole) {
+		Pageable pageable = PageRequest.of(14999, pageSize);
+		List<Product> offsetProducts = productRepository.findAllByShopType(shopType, pageable).getContent();
+		blackhole.consume(offsetProducts);
+	}
+
+	// No-Offset 방식 마지막 페이지 조회 성능 테스트
 	@Benchmark
 	public void testNoOffsetPaging(Blackhole blackhole) {
-		Integer lastId = 0;
+		Integer lastId = 149990;
 		List<Product> noOffsetProducts = productRepository.findProductsByShopTypeAndLastId(shopType, lastId, pageSize);
 		blackhole.consume(noOffsetProducts);
 	}
