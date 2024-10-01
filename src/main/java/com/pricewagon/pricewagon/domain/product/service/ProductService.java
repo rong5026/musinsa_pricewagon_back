@@ -31,24 +31,12 @@ public class ProductService {
 
 	// 쇼핑몰에 따른 상품 리스트 조회
 	@Transactional(readOnly = true)
-	public List<BasicProductInfo> getProductsByShopType1(ShopType shopType, Pageable pageable) {
-		List<Product> products = productRepository.findAllByShopType(shopType, pageable).getContent();
-		return products.stream()
-			.map(product -> {
-				Integer previousPrice = 100;
-				return BasicProductInfo.createHistoryOf(product, previousPrice);
-			})
-			.toList();
-	}
-
-	@Transactional(readOnly = true)
 	public List<BasicProductInfo> getProductsByShopType(ShopType shopType, Integer lastId, int size) {
 		List<Product> products = productRepository.findProductsByShopTypeAndLastId(shopType, lastId, size);
 
 		return products.stream()
 			.map(product -> {
-				Integer previousPrice = 100;
-				// Integer previousPrice = productHistoryService.getDifferentLatestPriceByProductId(product);
+				Integer previousPrice = productHistoryService.getDifferentLatestPriceByProductId(product);
 				return BasicProductInfo.createHistoryOf(product, previousPrice);
 			})
 			.toList();
