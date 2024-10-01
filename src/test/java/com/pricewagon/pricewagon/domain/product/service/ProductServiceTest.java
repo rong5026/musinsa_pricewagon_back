@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.pricewagon.pricewagon.domain.product.dto.ProductDto;
-import com.pricewagon.pricewagon.domain.product.dto.response.BasicProductInfo;
 import com.pricewagon.pricewagon.domain.product.entity.Product;
 import com.pricewagon.pricewagon.domain.product.entity.ShopType;
 import com.pricewagon.pricewagon.domain.product.repository.product.ProductRepository;
@@ -21,9 +20,6 @@ class ProductServiceTest {
 
 	@Autowired
 	private ProductRepository productRepository;
-
-	@Autowired
-	private ProductService productService;
 
 	/**
 	 * Offset 방식과 No-Offset 방식의 성능 비교 테스트
@@ -36,18 +32,18 @@ class ProductServiceTest {
 		// Offset 방식 첫 페이지 성능 테스트
 		long offsetFirstPageStartTime = System.currentTimeMillis();
 		Pageable firstPageable = PageRequest.of(0, pageSize);
-		List<BasicProductInfo> offsetFirstPageProducts = productService.getProductsByShopType1(shopType, firstPageable);
+		List<Product> offsetFirstPageProducts = productRepository.findAllByShopType(shopType, firstPageable).getContent();
 		long offsetFirstPageEndTime = System.currentTimeMillis();
 
 		// Offset 방식 마지막 페이지 성능 테스트
 		long offsetLastPageStartTime = System.currentTimeMillis();
 		Pageable lastPageable = PageRequest.of(14990, pageSize);
-		List<BasicProductInfo> offsetLaststPageProducts = productService.getProductsByShopType1(shopType, lastPageable);
+		List<Product> offsetLaststPageProducts = productRepository.findAllByShopType(shopType, lastPageable).getContent();
 		long offsetLastPageEndTime = System.currentTimeMillis();
 
 		// No-Offset 방식 성능 테스트 (처음에는 lastId가 null로 시작)
 		long noOffsetStartTime = System.currentTimeMillis();
-		List<BasicProductInfo> noOffsetProducts =  productService.getProductsByShopType(shopType, 149990, pageSize);
+		List<Product> noOffsetProducts =  productRepository.findProductsByShopTypeAndLastId(shopType, 149990, pageSize);
 		long noOffsetEndTime = System.currentTimeMillis();
 
 
@@ -62,10 +58,13 @@ class ProductServiceTest {
 		assertEquals(offsetFirstPageProducts.size(), noOffsetProducts.size(), "두 방식의 조회된 상품 수가 다릅니다.");
 
 		for (int i = 0; i < offsetLaststPageProducts.size(); i++) {
-			BasicProductInfo offsetProduct = offsetLaststPageProducts.get(i);
-			BasicProductInfo noOffsetProduct = noOffsetProducts.get(i);
+			Product offsetProduct = offsetLaststPageProducts.get(i);
+			Product noOffsetProduct = noOffsetProducts.get(i);
 
-			assertEquals(offsetProduct, noOffsetProduct, "Offset 방식과 No-Offset 방식의 " + (i + 1) + "번째 상품이 다릅니다.");
+			ProductDto offsetProductDto = ProductDto.toDTO(offsetProduct);
+			ProductDto noOffsetProductDto = ProductDto.toDTO(noOffsetProduct);
+
+			assertEquals(offsetProductDto, noOffsetProductDto, "Offset 방식과 No-Offset 방식의 " + (i + 1) + "번째 상품이 다릅니다.");
 		}
 	}
 }
