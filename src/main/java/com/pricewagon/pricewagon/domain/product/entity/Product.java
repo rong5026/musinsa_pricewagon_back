@@ -24,6 +24,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -87,4 +88,21 @@ public class Product extends BaseAuditEntity {
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Alarm> alarms = new ArrayList<>();
+
+	@Builder
+	public Product(String imgUrl, String name, Integer productNumber, String brand, Integer currentPrice,
+		BigDecimal starScore, Integer reviewCount, Integer likeCount, ShopType shopType,
+		Category category, ProductDetail productDetail) {
+		this.imgUrl = imgUrl;
+		this.name = name;
+		this.productNumber = productNumber;
+		this.brand = brand;
+		this.currentPrice = currentPrice;
+		this.starScore = starScore;
+		this.reviewCount = reviewCount;
+		this.likeCount = likeCount;
+		this.shopType = shopType;
+		this.category = category;
+		this.productDetail = productDetail;
+	}
 }

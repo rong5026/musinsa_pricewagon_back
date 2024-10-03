@@ -7,13 +7,14 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import com.pricewagon.pricewagon.domain.product.entity.ProductHistory;
+import com.pricewagon.pricewagon.domain.product.repository.producthistory.ProductHistoryCustomRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class ProductHistoryCustomRepositoryImpl implements ProductHistoryCustomRepository {
+public class ProductHistoryRepositoryImpl implements ProductHistoryCustomRepository {
 	private final JPAQueryFactory jpaQueryFactory;
 	@Override
 	public Optional<ProductHistory> findFirstByProductIdAndPriceNot(Integer productId, Integer currentPrice) {

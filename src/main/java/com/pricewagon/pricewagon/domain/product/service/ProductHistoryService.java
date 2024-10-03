@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.pricewagon.pricewagon.domain.product.entity.Product;
 import com.pricewagon.pricewagon.domain.product.entity.ProductHistory;
-import com.pricewagon.pricewagon.domain.product.repository.ProductHistoryRepository;
+import com.pricewagon.pricewagon.domain.product.repository.producthistory.ProductHistoryRepository;
 
 import lombok.RequiredArgsConstructor;
 
